@@ -25,7 +25,7 @@ WHITE = (254, 254, 254)
 clock = pygame.time.Clock()
 pygame.init()
 world = pygame.display.set_mode([worldx, worldy])
-backdrop = pygame.image.load(os.path.join('images', 'stage.png'))
+backdrop = pygame.image.load(os.path.join('images', 'MountainSilhouette_Pixelart_Parallax_BG_03.png'))
 backdropbox = world.get_rect()
 
 
