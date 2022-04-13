@@ -3,6 +3,7 @@ import sys
 import os
 
 ############## VARIABLES ###############
+#
 
 worldx = 960
 worldy = 720
