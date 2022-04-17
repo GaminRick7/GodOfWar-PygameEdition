@@ -2,6 +2,8 @@ import pygame
 import sys
 import os
 
+from spritesheet import Spritesheet
+
 ############## VARIABLES ###############
 #
 
@@ -28,7 +30,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.LEFT_KEY, self.RIGHT_KEY, self.FACING_LEFT = False, False, False
-        
+
 
 
 ############### INITIAL SETUP #############
@@ -41,11 +43,7 @@ backdropbox = world.get_rect()
 
 
 ################ MAIN ####################
-player = Player()   # spawn player
-player.rect.x = 0   # go to x
-player.rect.y = 0   # go to y
-player_list = pygame.sprite.Group()
-player_list.add(player)
+
 while main:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
