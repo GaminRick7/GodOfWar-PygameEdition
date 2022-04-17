@@ -14,11 +14,21 @@ main = True
 BLUE = (25, 25, 200)
 BLACK = (23, 23, 23)
 WHITE = (254, 254, 254)
-
+ALPHA = (0, 255, 0)
 
 ############### OBJECTS ##################
 
 # put Python classes and functions here
+
+class Player(pygame.sprite.Sprite):
+    """
+    Spawn a player
+    """
+
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.LEFT_KEY, self.RIGHT_KEY, self.FACING_LEFT = False, False, False
+        
 
 
 ############### INITIAL SETUP #############
@@ -26,12 +36,16 @@ WHITE = (254, 254, 254)
 clock = pygame.time.Clock()
 pygame.init()
 world = pygame.display.set_mode([worldx, worldy])
-backdrop = pygame.image.load(os.path.join('images', 'MountainSilhouette_Pixelart_Parallax_BG_03.png'))
+backdrop = pygame.image.load(os.path.join('images', 'mountain.png'))
 backdropbox = world.get_rect()
 
 
 ################ MAIN ####################
-
+player = Player()   # spawn player
+player.rect.x = 0   # go to x
+player.rect.y = 0   # go to y
+player_list = pygame.sprite.Group()
+player_list.add(player)
 while main:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
