@@ -11,6 +11,8 @@ class Player(pygame.sprite.Sprite):
         self.movex = 0
         self.movey = 0
         self.frame = 0
+        self.is_jumping = True
+        self.is_falling = False
         self.walk_images = []
         self.jump_images = []
         for i in range(0, 7):
@@ -30,6 +32,8 @@ class Player(pygame.sprite.Sprite):
 
     def control(self, x, y):
         """
+        Args: self, x, y
+        Returns: none
         control player movement
         """
         self.movex += x
@@ -62,3 +66,4 @@ class Player(pygame.sprite.Sprite):
             if self.frame > 3*ani:
                 self.frame = 0
             self.image = self.jump_images[self.frame//ani]
+           
