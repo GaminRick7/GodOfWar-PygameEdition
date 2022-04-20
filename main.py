@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+import time
 from player import Player
 
 from spritesheet import Spritesheet
@@ -18,10 +19,6 @@ BLUE = (25, 25, 200)
 BLACK = (23, 23, 23)
 WHITE = (254, 254, 254)
 ALPHA = (0, 255, 0)
-
-############### OBJECTS ##################
-
-
 
 ############### INITIAL SETUP #############
 
@@ -58,7 +55,7 @@ while main:
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
                 player.control(steps, 0)
             if event.key == pygame.K_UP or event.key == ord('w'):
-                print(0, 10)
+                player.control(0, -2)
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == ord('a'):
                 player.control(steps, 0)
