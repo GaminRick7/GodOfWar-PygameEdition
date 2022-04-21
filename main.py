@@ -41,12 +41,13 @@ player_list.add(player)
 steps = 2
 
 
-def draw_bg():
-    screen.blit(sky_img, (0,0))
-    screen.blit
+enemy = Enemy(300, 0)
+enemy_list = pygame.sprite.Group()
+enemy_list.add(enemy)
 ################ MAIN ####################
 
 while main:
+    screen.fill((0,0,0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -71,7 +72,10 @@ while main:
                 player.control(steps, 0)
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
                 player.control(-steps, 0)
-    pygame.display.flip()
+    
     clock.tick(fps)
     player.update()
+    enemy_list.draw(world)
+    enemy.update()
     player_list.draw(world)
+    pygame.display.flip()

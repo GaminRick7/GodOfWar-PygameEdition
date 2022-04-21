@@ -19,7 +19,6 @@ class Player(pygame.sprite.Sprite):
         for i in range(0, 7):
             walk_image = pygame.image.load(os.path.join('images', f'walk00{str(i)}.png')).convert()
             walk_image.convert_alpha()  # optimise alpha
-            walk_image.set_colorkey(ALPHA)  # set alpha
             self.walk_images.append(walk_image)
             self.image = self.walk_images[0]
             self.rect = self.image.get_rect()
