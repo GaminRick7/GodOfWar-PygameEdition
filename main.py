@@ -31,6 +31,7 @@ clock = pygame.time.Clock()
 pygame.init()
 world = pygame.display.set_mode([worldx, worldy])
 backdrop = pygame.image.load(os.path.join('images', 'mountain.png'))
+backdrop = pygame.transform.scale(backdrop, (960, 480))
 backdropbox = world.get_rect()
 
 player = Player()  # spawn player
@@ -41,7 +42,7 @@ player_list.add(player)
 steps = 2
 
 
-enemy = Enemy(300, 0)
+enemy = Enemy(300, 0, 4, "enemy1")
 enemy_list = pygame.sprite.Group()
 enemy_list.add(enemy)
 ################ MAIN ####################
@@ -74,6 +75,7 @@ while main:
                 player.control(-steps, 0)
     
     clock.tick(fps)
+    world.blit(backdrop, backdropbox)
     player.update()
     enemy_list.draw(world)
     enemy.update()
