@@ -3,6 +3,7 @@ import sys
 import os
 import time
 from player import Player
+from enemy import Enemy
 
 from spritesheet import Spritesheet
 
@@ -11,6 +12,10 @@ from spritesheet import Spritesheet
 
 worldx = 960
 worldy = 480
+LOWER_MARGIN = 100
+SIDE_MARGIN = 300
+
+screen = pygame.display.set_mode((worldx, worldy))
 fps = 40  # frame rate
 ani = 4   # animation cycles
 main = True
@@ -35,6 +40,10 @@ player_list = pygame.sprite.Group()
 player_list.add(player)
 steps = 2
 
+
+def draw_bg():
+    screen.blit(sky_img, (0,0))
+    screen.blit
 ################ MAIN ####################
 
 while main:
@@ -56,6 +65,7 @@ while main:
                 player.control(steps, 0)
             if event.key == pygame.K_UP or event.key == ord('w'):
                 player.control(0, -2)
+
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == ord('a'):
                 player.control(steps, 0)

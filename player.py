@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.is_falling = False
         self.walk_images = []
         self.jump_images = []
+        self.attack_images = []
         for i in range(0, 7):
             walk_image = pygame.image.load(os.path.join('images', f'walk00{str(i)}.png')).convert()
             walk_image.convert_alpha()  # optimise alpha
@@ -28,7 +29,7 @@ class Player(pygame.sprite.Sprite):
             jump_image.convert_alpha()  # optimise alpha
             jump_image.set_colorkey(ALPHA)  # set alpha
             self.jump_images.append(jump_image)
-
+        
 
     def control(self, x, y):
         """
