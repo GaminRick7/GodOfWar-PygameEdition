@@ -4,8 +4,9 @@ import os
 import time
 from player import Player
 from enemy import Enemy
-
+from tile import Tile
 from spritesheet import Spritesheet
+from level import Level
 
 ############## VARIABLES ###############
 #
@@ -45,6 +46,10 @@ steps = 2
 enemy = Enemy(300, 0, 4, "enemy1")
 enemy_list = pygame.sprite.Group()
 enemy_list.add(enemy)
+
+test_tile = pygame.sprite.Group(Tile((100,100), 50))
+
+level = Level(level_map, screen)
 ################ MAIN ####################
 
 while main:
@@ -80,4 +85,5 @@ while main:
     enemy_list.draw(world)
     enemy.update()
     player_list.draw(world)
+    test_tile.draw(screen)
     pygame.display.flip()
