@@ -49,6 +49,18 @@ enemy_list.add(enemy)
 
 test_tile = pygame.sprite.Group(Tile((100,100), 50))
 
+level_map = [
+'                            ',
+'                            ',
+' XX    XXX            XX    ',
+' XX P                       ',
+' XXXX         XX         XX ',
+' XXXX       XX              ',
+' XX    X  XXXX    XX  XX    ',
+'       X  XXXX    XX  XXX   ',
+'    XXXX  XXXXXX  XX  XXXX  ',
+'XXXXXXXX  XXXXXX  XX  XXXX  ']
+
 level = Level(level_map, screen)
 ################ MAIN ####################
 
@@ -81,9 +93,11 @@ while main:
     
     clock.tick(fps)
     world.blit(backdrop, backdropbox)
+    level.setup_level(level_map)
+    level.run()
     player.update()
     enemy_list.draw(world)
     enemy.update()
     player_list.draw(world)
-    test_tile.draw(screen)
+
     pygame.display.flip()
