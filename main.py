@@ -117,5 +117,4 @@ while main:
     enemy_list.draw(world)
     enemy.update()
     player_list.draw(world)
-
     pygame.display.flip()

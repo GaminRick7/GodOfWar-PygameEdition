@@ -18,7 +18,7 @@ class Level:
                     self.tiles.add(tile)
     
     def run(self):
-        self.tiles.update(-4)
+        self.tiles.update(-40)
         self.tiles.draw(self.display_surface)
 
     def tilechange(self):
