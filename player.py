@@ -12,7 +12,11 @@ class Player(pygame.sprite.Sprite):
         self.movey = 0
         self.frame = 0
         self.is_jumping = True
-        self.is_falling = False
+        self.on_ground = False
+        self.gravity = 0.35 
+        self.acceleration = pygame.math.Vector2(0, self.gravity)
+        self.velocity = pygame.math.Vector2(0,0)
+        self.position = pygame.math.Vector2(0,0)
         self.walk_images = []
         self.jump_images = []
         self.attack_images = []
@@ -67,3 +71,18 @@ class Player(pygame.sprite.Sprite):
                 self.frame = 0
             self.image = self.jump_images[self.frame//ani]
            
+def vertical_movement(self, dt):
+    self.velocity.y += self.acceleration
+    if self.velocity.y > 7:
+        self.velocity.y = 7
+    if self.postion.y > 128:
+        self.on_ground= True
+        self.velocity = 0
+        self.position.y = 128
+    self.rect.bottom = self.postion.y
+
+def jump(self):
+    if self.on_ground:
+        self.is_jumping = True
+        self.velocity.y-= 8
+        self.on_ground = False

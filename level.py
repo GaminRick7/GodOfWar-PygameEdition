@@ -1,5 +1,6 @@
 import pygame
 from tile import Tile
+from player import Player
 
 class Level:
     def __init__(self, level_data, surface):
@@ -19,3 +20,6 @@ class Level:
     def run(self):
         self.tiles.update(-4)
         self.tiles.draw(self.display_surface)
+
+    def tilechange(self):
+        self.tiles.update(4)
