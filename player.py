@@ -39,31 +39,31 @@ class Player(pygame.sprite.Sprite):
         Returns: none
         control player movement
         """
-        
         self.direction.x += x
         self.direction.y += y
 
     def update(self):
         """
+        Args: none
+        Returns: none
         Update sprite position
         """
-
-        if self.rect.centerx < 100:
-            self.rect.x += 1
-        if self.rect.centerx > 800:
-            self.rect.x -= 1
-        if self.rect.centerx > 100 and self.rect.centerx < 800:
-            self.rect.x += self.direction.x
-            self.rect.y += self.direction.y
-
-        # moving left
+        
+        if self.rect.centerx > 100 and self.rect.centerx < 850:
+            self.rect.x = self.rect.x + self.direction.x
+            self.rect.y = self.rect.y + self.direction.y
+        elif self.rect.centerx <= 100:
+            self.rect.centerx = 101
+        elif self.rect.centerx >= 850:
+            self.rect.centerx = 849
+        # moving left animation
         if self.direction.x < 0:
             self.frame += 1
             if self.frame > 3*ani:
                 self.frame = 0
             self.image = pygame.transform.flip(self.walk_images[self.frame // ani], True, False)
 
-        # moving right
+        # moving right animation
         if self.direction.x > 0:
             self.frame += 1
             if self.frame > 3*ani:

@@ -37,15 +37,19 @@ class Level:
                     self.enemy_list.add(self.enemy)
     
     def scroll_x(self):
-        player = self.player.sprite
-        player_x = player.rect.centerx
-        direction_x = player.direction.x
+        if self.player.rect.centerx == 849:
+            if self.player.direction.x > 0:
+                self.world_shift = -4
+        elif self.player.rect.centerx == 101:
+            if self.player.direction.x < 0:
+                self.world_shift = 4
+        else:
+            self.world_shift = 0
         
-        if player_x < 200:
-            self.world_shift = 8
-            player.speed = 0
 
     def run(self):
-        self.player.update()
+        self.scroll_x()
         self.tiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
+        self.player.update()
+        self.player_list.draw(self.display_surface)
