@@ -17,6 +17,7 @@ class Level:
         # Enemy #
         self.enemy_list = pygame.sprite.Group()
 
+
         #World Shift
         self.world_shift = 0
     
@@ -35,6 +36,7 @@ class Level:
                 if cell == "E":
                     self.enemy = Enemy(col_index *48, row_index *48, 4, "enemy1")
                     self.enemy_list.add(self.enemy)
+                    
     
     def scroll_x(self):
         if self.player.rect.centerx == 849:
@@ -46,6 +48,26 @@ class Level:
         else:
             self.world_shift = 0
         
+    def horizontal_movement_collision(self):
+
+        for sprite in self.tiles.sprites():
+            if sprite.rect.colliderect(self.player.rect):
+                if self.player.direction.x > 0:
+                    self.player.rect.right = sprite.rect.left
+                if self.player.direction.x < 0:
+                    self.player.rect.left = sprite.rect.right
+    
+    def vertical_movement_collision(self):
+        self.player.apply_gravity()
+        for sprite in self.tiles.sprites():
+            if sprite.rect.colliderect(self.player.rect):
+                if self.player.direction.y > 0:
+                    self.player.rect.bottom = sprite.rect.top
+                    self.player.direction.y = 0
+                if self.player.direction.y < 0:
+                    self.player.rect.top = sprite.rect.bottom
+                    self.player.direction.y = 0
+
 
     def run(self):
         self.scroll_x()
@@ -53,3 +75,7 @@ class Level:
         self.tiles.draw(self.display_surface)
         self.player.update()
         self.player_list.draw(self.display_surface)
+        self.horizontal_movement_collision()
+        self.vertical_movement_collision()
+        self.enemy_list.draw(self.display_surface)
+        self.enemy.update()

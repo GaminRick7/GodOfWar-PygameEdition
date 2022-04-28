@@ -41,9 +41,7 @@ backdropbox = world.get_rect()
 steps = 2
 
 
-enemy = Enemy(300, 0, 4, "enemy1")
-enemy_list = pygame.sprite.Group()
-enemy_list.add(enemy)
+
 
 ########## BACKGROUND ###############
 bg = parallax.ParallaxSurface((960, 480), pygame.RLEACCEL)
@@ -60,15 +58,15 @@ bg.add(os.path.join('images', 'background','07.png'), 1)
 
 level_map = [
 '                            ',
-'                            ',
+'                           XXXXXXXXXXX ',
 ' XX    XXX            XX    ',
-' XXP                        ',
+' XXP                             XXXXXX',
 ' XXXX         XX         XX ',
-' XXXX       XX              ',
-' XX    X  XXXX    XX  XX       XXXXXX ',
+' XXXX       XX        E     XXXXXXXX ',
+' XX    X  XXXX    XX  XX       XXXXXXXXXXXXXXXXXXXXXXXXXXXX ',
 '       X  XXXX    XX  XXX             ',
 '    XXXX  XXXXXX  XX  XXXXXXXXX      X',
-'XXXXXXXX  XXXXXX  XX  XXXXXXXXXXXXX  ']
+'XXXXXXXX  XXXXXX  XX  XXXXXXXXXXXXX XXXXXXXXXXX ']
 
 level = Level(level_map, screen)
 scroll_speed =0
@@ -94,7 +92,7 @@ while main:
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
                 level.player.control(steps, 0)
                 scroll_speed +=2
-            if event.key == pygame.K_UP or event.key == ord('w'):
+            if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == ord('w'):
                 level.player.jump()
 
         if event.type == pygame.KEYUP:
@@ -108,6 +106,4 @@ while main:
     clock.tick(fps)
     bg.draw(screen)
     level.run()
-    enemy_list.draw(world)
-    enemy.update()
     pygame.display.flip()

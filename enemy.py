@@ -15,7 +15,7 @@ class Enemy(pygame.sprite.Sprite):
             idle_image.convert_alpha()  # optimise alpha
             self.idle_images.append(idle_image)
 
-            self.image = self.idle_images[0]
+            self.image = self.idle_images[-1]
             self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
