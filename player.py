@@ -8,8 +8,6 @@ ALPHA = (0, 255, 0)
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.movex = 0
-        self.movey = 0
         self.frame = 0
         self.is_jumping = True
         self.on_ground = False
@@ -17,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         self.acceleration = pygame.math.Vector2(0, self.gravity)
         self.velocity = pygame.math.Vector2(0,0)
         self.position = pygame.math.Vector2(0,0)
+        self.direction = pygame.math.Vector2(0,0)
         self.walk_images = []
         self.jump_images = []
         self.attack_images = []
@@ -40,32 +39,38 @@ class Player(pygame.sprite.Sprite):
         Returns: none
         control player movement
         """
-        self.movex += x
-        self.movey += y
+        
+        self.direction.x += x
+        self.direction.y += y
 
     def update(self):
         """
         Update sprite position
         """
 
-        self.rect.x = self.rect.x + self.movex
-        self.rect.y = self.rect.y + self.movey
+        if self.rect.centerx < 100:
+            self.rect.x += 1
+        if self.rect.centerx > 800:
+            self.rect.x -= 1
+        if self.rect.centerx > 100 and self.rect.centerx < 800:
+            self.rect.x += self.direction.x
+            self.rect.y += self.direction.y
 
         # moving left
-        if self.movex < 0:
+        if self.direction.x < 0:
             self.frame += 1
             if self.frame > 3*ani:
                 self.frame = 0
             self.image = pygame.transform.flip(self.walk_images[self.frame // ani], True, False)
 
         # moving right
-        if self.movex > 0:
+        if self.direction.x > 0:
             self.frame += 1
             if self.frame > 3*ani:
                 self.frame = 0
             self.image = self.walk_images[self.frame//ani]
 
-        if self.movey > 0:
+        if self.direction.y > 0:
             self.frame += 1
             if self.frame > 3*ani:
                 self.frame = 0
@@ -80,9 +85,3 @@ def vertical_movement(self, dt):
         self.velocity = 0
         self.position.y = 128
     self.rect.bottom = self.postion.y
-
-def jump(self):
-    if self.on_ground:
-        self.is_jumping = True
-        self.velocity.y-= 8
-        self.on_ground = False

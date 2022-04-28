@@ -37,7 +37,11 @@ backdrop = pygame.image.load(os.path.join('images', 'mountain.png'))
 backdrop = pygame.transform.scale(backdrop, (960, 480))
 backdropbox = world.get_rect()
 
-
+player = Player()  # spawn player
+player.rect.x = 0  # go to x
+player.rect.y = 0  # go to y
+player_list = pygame.sprite.Group()
+player_list.add(player)
 steps = 2
 
 
@@ -57,12 +61,10 @@ bg.add(os.path.join('images', 'background','04.png'), 2)
 bg.add(os.path.join('images', 'background','05.png'), 1.5)
 bg.add(os.path.join('images', 'background','06.png'), 1)
 bg.add(os.path.join('images', 'background','07.png'), 1)
-scroll_speed =0 #background scroll speed
 
-############### LEVEL SETUP #######################
 level_map = [
 '                            ',
-'        E                   ',
+'                            ',
 ' XX    XXX            XX    ',
 ' XX P                       ',
 ' XXXX         XX         XX ',
@@ -70,12 +72,14 @@ level_map = [
 ' XX    X  XXXX    XX  XX    ',
 '       X  XXXX    XX  XXX   ',
 '    XXXX  XXXXXX  XX  XXXX  ',
-'XXXXXXXX  XXXXXX  XX  XXXX  '] #tile map for level
+'XXXXXXXX  XXXXXX  XX  XXXX  ']
 
-level = Level(level_map, screen) # level is created
-level.setup_level(level_map) #tiles are drawn using setup_level()
-################ MAIN ###################
+level = Level(level_map, screen)
+scroll_speed =0
+################ MAIN ####################
+
 while main:
+    screen.fill((0,0,0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -89,26 +93,28 @@ while main:
                 finally:
                     main = False
             if event.key == pygame.K_LEFT or event.key == ord('a'):
-                level.player.control(-steps, 0)
+                player.control(-steps, 0)
                 scroll_speed -= 2
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                level.player.control(steps, 0)
+                player.control(steps, 0)
                 scroll_speed +=2
             if event.key == pygame.K_UP or event.key == ord('w'):
-                level.player.jump()
+                player.jump()
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT or event.key == ord('a'):
-                level.player.control(steps, 0)
+                player.control(steps, 0)
                 scroll_speed = 0
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                level.player.control(-steps, 0)
+                player.control(-steps, 0)
                 scroll_speed = 0
     bg.scroll(scroll_speed)
     clock.tick(fps)
     bg.draw(screen)
+    level.setup_level(level_map)
     level.run()
-    level.enemy_list.draw(world)
-    level.enemy.update()
-    level.player_list.draw(world)
+    player.update()
+    enemy_list.draw(world)
+    enemy.update()
+    player_list.draw(world)
     pygame.display.flip()

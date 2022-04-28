@@ -14,8 +14,11 @@ class Level:
         self.player_list = pygame.sprite.Group()
         self.player_list.add(self.player)
 
-
+        # Enemy #
         self.enemy_list = pygame.sprite.Group()
+
+        #World Shift
+        self.world_shift = 0
     
         #Setup Tile Map#
         self.tiles = pygame.sprite.Group()
@@ -33,7 +36,16 @@ class Level:
                     self.enemy = Enemy(col_index *48, row_index *48, 4, "enemy1")
                     self.enemy_list.add(self.enemy)
     
+    def scroll_x(self):
+        player = self.player.sprite
+        player_x = player.rect.centerx
+        direction_x = player.direction.x
+        
+        if player_x < 200:
+            self.world_shift = 8
+            player.speed = 0
+
     def run(self):
         self.player.update()
-        #self.tiles.update(-1)
+        self.tiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
