@@ -58,12 +58,12 @@ bg.add(os.path.join('images', 'background','07.png'), 1)
 
 level_map = [
 '                            ',
-'                           XXXXXXXXXXX ',
+'       Ehg                    XXXXXXXXXXX ',
 ' XX    XXX            XX    ',
 ' XXP                             XXXXXX',
 ' XXXX         XX         XX ',
-' XXXX       XX        E     XXXXXXXX ',
-' XX    X  XXXX    XX  XX       XXXXXXXXXXXXXXXXXXXXXXXXXXXX ',
+'            XX             XXXXXXXX ',
+'       X  XXXX    XX  XX       XXXXXXXXXXXXXXXXXXXXXXXXXXXX ',
 '       X  XXXX    XX  XXX             ',
 '    XXXX  XXXXXX  XX  XXXXXXXXX      X',
 'XXXXXXXX  XXXXXX  XX  XXXXXXXXXXXXX XXXXXXXXXXX ']
