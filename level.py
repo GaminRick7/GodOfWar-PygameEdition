@@ -2,11 +2,24 @@ import pygame
 from tile import Tile
 from player import Player
 from enemy import Enemy
+import parallax
+from math import inf
+import os
 
 class Level:
-    def __init__(self, level_data, surface):
+    def __init__(self, level_data, surface, bgfolder, bgnumber):
         self.display_surface = surface
         self.level_data = level_data
+        self.scroll_speed = 0
+        self.bg = parallax.ParallaxSurface((960, 480), pygame.RLEACCEL)
+        # clouds should not move at all
+        i = 1
+        speed = 3.5
+        self.bg.add(os.path.join('images', f'{bgfolder}',f'0{i}.png'), inf)
+        for image in range(bgnumber-1):
+            i+= 1
+            speed -= 0.5
+            self.bg.add(os.path.join('images', f'{bgfolder}',f'0{i}.png'), speed)
 
     def setup_level(self, layout):
         # Spawn Player #
@@ -20,7 +33,7 @@ class Level:
 
         #World Shift
         self.world_shift = 0
-    
+
         #Setup Tile Map#
         self.tiles = pygame.sprite.Group()
         for row_index, row in enumerate(layout):
@@ -37,7 +50,7 @@ class Level:
                     self.enemy = Enemy(col_index *48, row_index *48, 4, "enemy1")
                     self.enemy_list.add(self.enemy)
                     
-    
+        
     def scroll_x(self):
         if self.player.rect.centerx == 849:
             if self.player.direction.x > 0:
@@ -47,7 +60,7 @@ class Level:
                 self.world_shift = 4
         else:
             self.world_shift = 0
-        
+            
     def horizontal_movement_collision(self):
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(self.player.rect):
@@ -59,12 +72,13 @@ class Level:
     def vertical_movement_collision(self):
         self.player.apply_gravity()
         for sprite in self.tiles.sprites():
-            if sprite.rect.bottom.colliderect(self.player.rect):
-                self.player.rect.bottom = sprite.rect.top
-                self.player.direction.y = 0
-            if sprite.rect.top.colliderect(self.player.rect):
-                self.player.rect.top = sprite.rect.bottom
-                self.player.direction.y = 0
+            if sprite.rect.colliderect(self.player.rect):
+                if self.player.direction.y > 0:
+                    self.player.rect.bottom = sprite.rect.top
+                    self.player.direction.y = 0
+                if self.player.direction.y < 0:
+                    self.player.rect.top = sprite.rect.bottom
+                    self.player.direction.y = 0
 
 
     def run(self):

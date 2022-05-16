@@ -7,8 +7,7 @@ from enemy import Enemy
 from tile import Tile
 from spritesheet import Spritesheet
 from level import Level
-import parallax
-from math import inf
+
 
 ############## VARIABLES ###############
 #
@@ -43,35 +42,36 @@ steps = 2
 
 
 
-########## BACKGROUND ###############
-bg = parallax.ParallaxSurface((960, 480), pygame.RLEACCEL)
-# clouds should not move at all
-bg.add(os.path.join('images', 'background','01.png'), inf)
+########## LEVEL MAPS ###############
 
-# 02.png pans 3x faster than 07.png
-bg.add(os.path.join('images', 'background','02.png'), 3)
-bg.add(os.path.join('images', 'background','03.png'), 2.5)
-bg.add(os.path.join('images', 'background','04.png'), 2)
-bg.add(os.path.join('images', 'background','05.png'), 1.5)
-bg.add(os.path.join('images', 'background','06.png'), 1)
-bg.add(os.path.join('images', 'background','07.png'), 1)
 
-level_map = [
+level_map1 = [
 '                            ',
-'       Ehg                    XXXXXXXXXXX ',
-' XX    XXX            XX    ',
+'       E                     ',
+' XX    XXX                ',
 ' XXP                             XXXXXX',
-' XXXX         XX         XX ',
+'                                 XX ',
 '            XX             XXXXXXXX ',
-'       X  XXXX    XX  XX       XXXXXXXXXXXXXXXXXXXXXXXXXXXX ',
-'       X  XXXX    XX  XXX             ',
-'    XXXX  XXXXXX  XX  XXXXXXXXX      X',
-'XXXXXXXX  XXXXXX  XX  XXXXXXXXXXXXX XXXXXXXXXXX ']
+'       XXXXXXXXX       XXXXXXXXXXXXXXXXXXXXXXXX ',
+'                   ',
+'    XXXXXXXXXXXXXXXXXXXXX     X',
+'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
-level = Level(level_map, screen)
+level_map2 = [
+'                            ',
+'       E                     ',
+'     XXX                ',
+'                              XXXXXX',
+'             X                    XX ',
+'                         XXXXXXXX ',
+'                          ',
+'                   ',
+'    XXXXXXXXXXXXXXXXXXXXX     X',
+'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
+level = Level(level_map2, screen, "background", 7)
 scroll_speed =0
 ################ MAIN ####################
-level.setup_level(level_map)
+level.setup_level(level_map2)
 while main:
     screen.fill((0,0,0))
     for event in pygame.event.get():
@@ -102,8 +102,8 @@ while main:
             if event.key == pygame.K_RIGHT or event.key == ord('d'):
                 level.player.control(-steps, 0)
                 scroll_speed = 0
-    bg.scroll(scroll_speed)
+    level.bg.scroll(scroll_speed)
     clock.tick(fps)
-    bg.draw(screen)
+    level.bg.draw(screen)
     level.run()
     pygame.display.flip()
