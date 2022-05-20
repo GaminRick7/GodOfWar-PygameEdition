@@ -11,40 +11,20 @@ from button import Button
 
 
 ############## VARIABLES ###############
-#
 
 worldx = 960
 worldy = 480
-LOWER_MARGIN = 100
-SIDE_MARGIN = 300
 
 screen = pygame.display.set_mode((worldx, worldy))
 fps = 40  # frame rate
-ani = 4   # animation cycles
-main = True
-
-BLUE = (25, 25, 200)
-BLACK = (23, 23, 23)
-WHITE = (254, 254, 254)
-ALPHA = (0, 255, 0)
 
 ############### INITIAL SETUP #############
 
 clock = pygame.time.Clock()
 pygame.init()
-world = pygame.display.set_mode([worldx, worldy])
-backdrop = pygame.image.load(os.path.join('images', 'mountain.png'))
-backdrop = pygame.transform.scale(backdrop, (960, 480))
-backdropbox = world.get_rect()
-
-
 steps = 2
 
-
-
-
 ########## LEVEL MAPS ###############
-
 
 level_map1 = [
 '                            ',
@@ -60,22 +40,21 @@ level_map1 = [
 
 level_map2 = [
 '                            ',
-'       E                     ',
+'    I E I                     ',
 '     XXX                ',
 '                              XXXXXX',
 '             X                    XX ',
 '                         XXXXXXXX ',
 '                          ',
-'                   ',
+'      P             ',
 '    XXXXXXXXXXXXXXXXXXXXX     X',
 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
-level = Level(level_map2, screen, "background", 7)
-scroll_speed =0
+
 ################ MAIN ####################
 def get_font(size): # Returns Press-Start-2P in the desired size
     return pygame.font.Font("assets/font.ttf", size)
 
-def main_menu():
+def main_menu(): #Main Menu Screen that includes the play button and options button
     menuimg = pygame.image.load("images/8OWVccL.gif")
     logo = pygame.image.load("images/pngwing.com.png")
     menuimg = pygame.transform.scale(menuimg, (960, 480))
@@ -83,7 +62,6 @@ def main_menu():
         screen.blit(menuimg, (0,0))
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-        screen.blit(logo, (480,100))
         MENU_TEXT = get_font(70).render("GOD OF WAR", True, "#ab0000")
         MENU_RECT = MENU_TEXT.get_rect(center=(480, 100))
 
@@ -115,7 +93,9 @@ def main_menu():
 
         pygame.display.update()
 
-def game_loop():
+def game_loop(): #Main Game Loop
+    level = Level(level_map2, screen, "background", 7)
+    scroll_speed = 0
     level.setup_level(level_map2)
     scroll_speed = 0
     while True:
@@ -154,4 +134,3 @@ def game_loop():
         level.run()
         pygame.display.flip()
 main_menu()
-#game_loop()

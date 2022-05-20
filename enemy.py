@@ -9,7 +9,7 @@ class Enemy(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.numimg = numimg
         self.frame = 0
-        self.direction = pygame.math.Vector2(0,0)
+        self.direction = pygame.math.Vector2(0.001,0)
         self.gravity = 0.8
         self.idle_images = []
         for i in range(0, numimg):
@@ -25,8 +25,11 @@ class Enemy(pygame.sprite.Sprite):
     def apply_gravity(self):
         self.direction.y += self.gravity
         self.rect.y  += self.direction.y
-    def update(self):
+
+    def update(self, x_shift):
+        self.rect.x += self.direction.x
         self.apply_gravity()
+        self.rect.x += x_shift
         self.frame += 1
         if self.frame > (self.numimg - 2)*7:
             self.frame = 0

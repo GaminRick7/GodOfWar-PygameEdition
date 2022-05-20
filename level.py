@@ -1,5 +1,5 @@
 import pygame
-from tile import Tile
+from tile import Tile, invisTile
 from player import Player
 from enemy import Enemy
 import parallax
@@ -36,6 +36,7 @@ class Level:
 
         #Setup Tile Map#
         self.tiles = pygame.sprite.Group()
+        self.invisTiles = pygame.sprite.Group()
         for row_index, row in enumerate(layout):
             for col_index, cell in enumerate(row):
                 if cell == "X":
@@ -49,6 +50,11 @@ class Level:
                 if cell == "E":
                     self.enemy = Enemy(col_index *48, row_index *48, 4, "enemy1")
                     self.enemy_list.add(self.enemy)
+                if cell == "I":
+                    x = col_index *48
+                    y = row_index *48
+                    tile = invisTile((x, y), 48)
+                    self.invisTiles.add(tile)
                     
         
     def scroll_x(self):
@@ -68,6 +74,21 @@ class Level:
                     self.player.rect.right = sprite.rect.left
                 if self.player.direction.x < 0:
                     self.player.rect.left = sprite.rect.right
+            if sprite.rect.colliderect(self.enemy.rect):
+                if self.enemy.direction.x > 0:
+                    self.enemy.rect.right = sprite.rect.left
+                if self.enemy.direction.x < 0:
+                    self.enemy.rect.left = sprite.rect.right
+        for sprite in self.invisTiles.sprites():
+            if sprite.rect.colliderect(self.enemy.rect):
+                if self.enemy.direction.x > 0:
+                    self.enemy.rect.right = sprite.rect.left
+                    self.enemy.direction.x = -0.001
+                if self.enemy.direction.x < 0:
+                    self.enemy.rect.left = sprite.rect.right
+                    self.enemy.direction.x = 0.001 
+                
+    
     
     def vertical_movement_collision(self):
         self.player.apply_gravity()
@@ -79,15 +100,24 @@ class Level:
                 if self.player.direction.y < 0:
                     self.player.rect.top = sprite.rect.bottom
                     self.player.direction.y = 0
+            if sprite.rect.colliderect(self.enemy.rect):
+                if self.enemy.direction.y > 0:
+                    self.enemy.rect.bottom = sprite.rect.top
+                    self.enemy.direction.y = 0
+                if self.enemy.direction.y < 0:
+                    self.enemy.rect.top = sprite.rect.bottom
+                    self.enemy.direction.y = 0
 
 
     def run(self):
         self.scroll_x()
         self.tiles.update(self.world_shift)
+        self.invisTiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
+        self.invisTiles.draw(self.display_surface)
         self.player.update()
         self.player_list.draw(self.display_surface)
         self.horizontal_movement_collision()
         self.vertical_movement_collision()
         self.enemy_list.draw(self.display_surface)
-        self.enemy.update()
+        self.enemy.update(self.world_shift)

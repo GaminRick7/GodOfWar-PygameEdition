@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_images = []
         self.attack_images = []
         for i in range(0, 7):
-            walk_image = pygame.image.load(os.path.join('images', f'walk00{str(i)}.png')).convert()
+            walk_image = pygame.image.load(os.path.join('images', f'walk00{i}.png')).convert()
             walk_image.convert_alpha()  # optimise alpha
             self.walk_images.append(walk_image)
             self.image = self.walk_images[0]
@@ -76,14 +76,3 @@ class Player(pygame.sprite.Sprite):
             if self.frame > 3*ani:
                 self.frame = 0
             self.image = self.walk_images[self.frame//ani]
-
-           
-def vertical_movement(self, dt):
-    self.velocity.y += self.acceleration
-    if self.velocity.y > 7:
-        self.velocity.y = 7
-    if self.postion.y > 128:
-        self.on_ground= True
-        self.velocity = 0
-        self.position.y = 128
-    self.rect.bottom = self.postion.y
