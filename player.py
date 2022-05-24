@@ -9,6 +9,8 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.frame = 0
+        self.counter = 0
+        self.attacking = False
 
         self.direction = pygame.math.Vector2(0,0)
         self.gravity = 0.8
@@ -30,6 +32,11 @@ class Player(pygame.sprite.Sprite):
             jump_image.convert_alpha()  # optimise alpha
             jump_image.set_colorkey(ALPHA)  # set alpha
             self.jump_images.append(jump_image)
+        
+        for i in range(0, 29):
+            attack_image = pygame.image.load(os.path.join('images', 'attack', f'tile00{str(i)}.png')).convert()
+            attack_image.convert_alpha()  # optimise alpha
+            self.attack_images.append(attack_image)
         
     def apply_gravity(self):
         self.direction.y += self.gravity
@@ -63,16 +70,25 @@ class Player(pygame.sprite.Sprite):
         elif self.rect.centerx >= 850:
             self.speed = 1
             self.rect.centerx = 849
+
+        self.frame += 1
+        self.counter += 1
         # moving left animation
         if self.direction.x < 0:
-            self.frame += 1
             if self.frame > 3*ani:
                 self.frame = 0
             self.image = pygame.transform.flip(self.walk_images[self.frame // ani], True, False)
 
         # moving right animation
         if self.direction.x > 0:
-            self.frame += 1
             if self.frame > 3*ani:
                 self.frame = 0
             self.image = self.walk_images[self.frame//ani]
+        
+        if self.attacking == True:
+            if self.counter > (len(self.attack_images) - 1)*2:
+                self.counter = 0
+                self.attacking = False
+                self.image = self.walk_images[0]
+            if self.frame %2 == 0:
+                self.image = self.attack_images[self.counter//2]

@@ -39,11 +39,11 @@ level_map1 = [
 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
 level_map2 = [
-'                            ',
-'    I E I                     ',
+'      E                      ',
+'    I   I                     ',
 '     XXX                ',
 '                              XXXXXX',
-'             X                    XX ',
+'             X          I E  I      XX ',
 '                         XXXXXXXX ',
 '                          ',
 '      P             ',
@@ -120,6 +120,8 @@ def game_loop(): #Main Game Loop
                     scroll_speed +=2
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == ord('w'):
                     level.player.jump()
+                if event.key == ord('e'):
+                    level.player.attacking = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == ord('a'):

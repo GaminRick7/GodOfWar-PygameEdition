@@ -48,8 +48,9 @@ class Level:
                     self.player.rect.x = col_index *48
                     self.player.rect.bottom = row_index *48
                 if cell == "E":
-                    self.enemy = Enemy(col_index *48, row_index *48, 4, "enemy1")
-                    self.enemy_list.add(self.enemy)
+                    print(col_index *48, row_index *48)
+                    enemy = Enemy((col_index *48, row_index *48), 4, 9, "enemy1")
+                    self.enemy_list.add(enemy)
                 if cell == "I":
                     x = col_index *48
                     y = row_index *48
@@ -68,27 +69,27 @@ class Level:
             self.world_shift = 0
             
     def horizontal_movement_collision(self):
+        #Normal Tile Collision
         for sprite in self.tiles.sprites():
             if sprite.rect.colliderect(self.player.rect):
                 if self.player.direction.x > 0:
                     self.player.rect.right = sprite.rect.left
                 if self.player.direction.x < 0:
                     self.player.rect.left = sprite.rect.right
-            if sprite.rect.colliderect(self.enemy.rect):
-                if self.enemy.direction.x > 0:
-                    self.enemy.rect.right = sprite.rect.left
-                if self.enemy.direction.x < 0:
-                    self.enemy.rect.left = sprite.rect.right
+            for enemy in self.enemy_list.sprites():
+                if sprite.rect.colliderect(enemy.rect):
+                    if enemy.direction.x > 0:
+                        enemy.rect.right = sprite.rect.left
+                    if enemy.direction.x < 0:
+                        enemy.rect.left = sprite.rect.right
         for sprite in self.invisTiles.sprites():
             for enemy in self.enemy_list.sprites():
                 if sprite.rect.colliderect(enemy.rect):
                     if enemy.direction.x > 0:
-                        print("hit right")
                         enemy.rect.right = sprite.rect.left - 0.5
                         enemy.direction.x = -1
                         print(enemy.direction.x)
                     elif enemy.direction.x < 0:
-                        print("hit left")
                         enemy.rect.left = sprite.rect.right + 0.5
                         enemy.direction.x = 1
                         print(enemy.direction.x)
@@ -105,14 +106,20 @@ class Level:
                 if self.player.direction.y < 0:
                     self.player.rect.top = sprite.rect.bottom
                     self.player.direction.y = 0
-            if sprite.rect.colliderect(self.enemy.rect):
-                if self.enemy.direction.y > 0:
-                    self.enemy.rect.bottom = sprite.rect.top
-                    self.enemy.direction.y = 0
-                if self.enemy.direction.y < 0:
-                    self.enemy.rect.top = sprite.rect.bottom
-                    self.enemy.direction.y = 0
+            for enemy in self.enemy_list.sprites():
+                if sprite.rect.colliderect(enemy.rect):
+                    if enemy.direction.y > 0:
+                        enemy.rect.bottom = sprite.rect.top
+                        enemy.direction.y = 0
+                    if enemy.direction.y < 0:
+                        enemy.rect.top = sprite.rect.bottom
+                        enemy.direction.y = 0
 
+
+    def epcollision(self):
+        for enemy in self.enemy_list.sprites():
+            if enemy.rect.colliderect(self.player.rect):
+                enemy.attacking = True
 
     def run(self):
         self.scroll_x()
@@ -124,5 +131,6 @@ class Level:
         self.player_list.draw(self.display_surface)
         self.vertical_movement_collision()
         self.horizontal_movement_collision()
+        self.epcollision()
         self.enemy_list.draw(self.display_surface)
         self.enemy_list.update(self.world_shift)
