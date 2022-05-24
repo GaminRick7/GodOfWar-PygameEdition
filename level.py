@@ -80,13 +80,18 @@ class Level:
                 if self.enemy.direction.x < 0:
                     self.enemy.rect.left = sprite.rect.right
         for sprite in self.invisTiles.sprites():
-            if sprite.rect.colliderect(self.enemy.rect):
-                if self.enemy.direction.x > 0:
-                    self.enemy.rect.right = sprite.rect.left
-                    self.enemy.direction.x = -0.001
-                if self.enemy.direction.x < 0:
-                    self.enemy.rect.left = sprite.rect.right
-                    self.enemy.direction.x = 0.001 
+            for enemy in self.enemy_list.sprites():
+                if sprite.rect.colliderect(enemy.rect):
+                    if enemy.direction.x > 0:
+                        print("hit right")
+                        enemy.rect.right = sprite.rect.left - 0.5
+                        enemy.direction.x = -1
+                        print(enemy.direction.x)
+                    elif enemy.direction.x < 0:
+                        print("hit left")
+                        enemy.rect.left = sprite.rect.right + 0.5
+                        enemy.direction.x = 1
+                        print(enemy.direction.x)
                 
     
     
@@ -117,7 +122,7 @@ class Level:
         self.invisTiles.draw(self.display_surface)
         self.player.update()
         self.player_list.draw(self.display_surface)
-        self.horizontal_movement_collision()
         self.vertical_movement_collision()
+        self.horizontal_movement_collision()
         self.enemy_list.draw(self.display_surface)
-        self.enemy.update(self.world_shift)
+        self.enemy_list.update(self.world_shift)
