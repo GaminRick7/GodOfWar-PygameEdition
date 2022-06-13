@@ -41,14 +41,14 @@ level_map1 = [
 level_map2 = [
 '      E                      ',
 '    I   I                     ',
-'     XXX                ',
+'     XXX                         ',
 '                              XXXXXX',
-'             X          I E  I      XX ',
+'             X          I E  I   I   XX ',
 '                         XXXXXXXX ',
 '                          ',
-'      P             ',
-'    XXXXXXXXXXXXXXXXXXXXX     X',
-'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
+'   I   P     O            I',
+'I    XXXXXXXXXXXXXXXXXXXXX     X',
+' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
 ################ MAIN ####################
 def get_font(size): # Returns Press-Start-2P in the desired size
@@ -65,11 +65,11 @@ def main_menu(): #Main Menu Screen that includes the play button and options but
         MENU_TEXT = get_font(70).render("GOD OF WAR", True, "#ab0000")
         MENU_RECT = MENU_TEXT.get_rect(center=(480, 100))
 
-        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(480, 240), 
+        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(480, 200), 
                             text_input="PLAY", font=get_font(35), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(480, 400), 
+        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(480, 300), 
                             text_input="OPTIONS", font=get_font(35), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(480, 550), 
+        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(480, 400), 
                             text_input="QUIT", font=get_font(35), base_color="#d7fcd4", hovering_color="White")
 
         screen.blit(MENU_TEXT, MENU_RECT)
@@ -94,12 +94,18 @@ def main_menu(): #Main Menu Screen that includes the play button and options but
         pygame.display.update()
 
 def game_loop(): #Main Game Loop
-    level = Level(level_map2, screen, "background", 7)
+    level = Level(level_map2, screen, "background", 7) 
+    level2 = Level(level_map2, screen, "background2", 7)
+    level3 = Level(level_map2, screen, "background3", 9) 
+    currentLevel = 1
     scroll_speed = 0
     level.setup_level(level_map2)
-    scroll_speed = 0
+
     while True:
         screen.fill((0,0,0))
+        LevelText = get_font(70).render("Level 2", True, "#ab0000")
+        LevelRect = LevelText.get_rect(center=(480, 50))
+        screen.blit(LevelText, LevelRect)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -113,10 +119,10 @@ def game_loop(): #Main Game Loop
                     finally:
                         main = False
                 if event.key == pygame.K_LEFT or event.key == ord('a'):
-                    level.player.control(-steps, 0)
+                    level.player.control(-steps)
                     scroll_speed -= 2
                 if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                    level.player.control(steps, 0)
+                    level.player.control(steps)
                     scroll_speed +=2
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == ord('w'):
                     level.player.jump()
@@ -125,14 +131,24 @@ def game_loop(): #Main Game Loop
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == ord('a'):
-                    level.player.control(steps, 0)
+                    level.player.control(steps)
                     scroll_speed = 0
                 if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                    level.player.control(-steps, 0)
+                    level.player.control(-steps)
                     scroll_speed = 0
         level.bg.scroll(scroll_speed)
         clock.tick(fps)
         level.bg.draw(screen)
         level.run()
+        for portal in level.portal_list:
+            if level.player.rect.colliderect(portal.rect):
+                if currentLevel == 1:
+                    level = level2
+                if currentLevel == 2:
+                    level = level3
+                currentLevel += 1
+                level.setup_level(level_map2)
+                level.player.direction.x = 0
+                level.player.control(steps)
         pygame.display.flip()
 main_menu()
