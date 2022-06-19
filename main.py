@@ -28,27 +28,27 @@ steps = 2
 
 level_map1 = [
 '                            ',
-'       E                     ',
+'      I E I                    ',
 ' XX    XXX                ',
-' XXP                             XXXXXX',
-'                                 XX ',
-'            XX             XXXXXXXX ',
-'       XXXXXXXXX       XXXXXXXXXXXXXXXXXXXXXXXX ',
-'                   ',
+' XX                             XXXXXX',
+'                             I E   IXX ',
+'      I  E    IX       I      IXXXXXXXXI      I  O',
+'       XXXXXXXXX       XXXXXXXXXXXXXXXXXX     XXXXXX ',
+'    P               ',
 '    XXXXXXXXXXXXXXXXXXXXX     X',
-'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
+'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX']
 
 level_map2 = [
 '      E                      ',
 '    I   I                     ',
-'     XXX                         ',
-'                              XXXXXX',
-'             X          I E  I   I   XX ',
+'     XXX                     I  E    I',
+'                              XXXXXXX  O',
+'             X          I E      I   XX ',
 '                         XXXXXXXX ',
 '                          ',
-'   I   P     O            I',
-'I    XXXXXXXXXXXXXXXXXXXXX     X',
-' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
+'    I   P                 I',
+'I    XXXXXXXXXXXXXXXXXXXXXI  E   IXI   E    I',
+' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
 ################ MAIN ####################
 def get_font(size): # Returns Press-Start-2P in the desired size
@@ -94,18 +94,21 @@ def main_menu(): #Main Menu Screen that includes the play button and options but
         pygame.display.update()
 
 def game_loop(): #Main Game Loop
-    level = Level(level_map2, screen, "background", 7) 
+    level = Level(level_map1, screen, "background", 7) 
     level2 = Level(level_map2, screen, "background2", 7)
-    level3 = Level(level_map2, screen, "background3", 9) 
+    level3 = Level(level_map2, screen, "background3", 9)
+    level4 = Level(level_map1, screen, "background", 7)
+    level5 = Level(level_map2, screen, "background2", 7)
+    level6 = Level(level_map2, screen, "background3", 9)
+
     currentLevel = 1
     scroll_speed = 0
-    level.setup_level(level_map2)
+    level.setup_level(level_map1)
+    LevelText = get_font(15).render("Level 1: Forests of Valheim", True, "White")
 
     while True:
         screen.fill((0,0,0))
-        LevelText = get_font(70).render("Level 2", True, "#ab0000")
         LevelRect = LevelText.get_rect(center=(480, 50))
-        screen.blit(LevelText, LevelRect)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -140,15 +143,22 @@ def game_loop(): #Main Game Loop
         clock.tick(fps)
         level.bg.draw(screen)
         level.run()
+        screen.blit(LevelText, LevelRect)
+        if level.player.rect.y >= 960:
+            level.player.kill()
+        elif level.player.health <= 0:
+            level.player.kill()
         for portal in level.portal_list:
+            prevDirection = level.player.direction.x
             if level.player.rect.colliderect(portal.rect):
                 if currentLevel == 1:
                     level = level2
+                    LevelText = get_font(15).render("Level 2: Valleys of Jotunheim", True, "White")
                 if currentLevel == 2:
                     level = level3
+                    LevelText = get_font(15).render("Level 3: Valleys of Alfheim", True, "White")
                 currentLevel += 1
                 level.setup_level(level_map2)
-                level.player.direction.x = 0
-                level.player.control(steps)
+                level.player.control(prevDirection)
         pygame.display.flip()
 main_menu()

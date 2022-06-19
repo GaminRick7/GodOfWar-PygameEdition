@@ -62,6 +62,7 @@ class Player(pygame.sprite.Sprite):
     def draw_health(self):
         pygame.draw.rect(screen, (255,0,0), (10, 10, self.health, 25))
         pygame.draw.rect(screen, (255,255,255), (10,10, self.maximumHealth, 25), 4)
+
     def update(self):
         """
         Args: none
@@ -84,17 +85,17 @@ class Player(pygame.sprite.Sprite):
         self.frame += 1
 
 
-        
-        if self.direction.x < 0:
-            if self.frame > 3*ani:
-                self.frame = 0
-            self.image = pygame.transform.flip(self.walk_images[self.frame // ani], True, False)
+        if self.attacking == False:
+            if self.direction.x < 0:
+                if self.frame > 3*ani:
+                    self.frame = 0
+                self.image = pygame.transform.flip(self.walk_images[self.frame // ani], True, False)
 
-        # moving right animation
-        elif self.direction.x > 0:
-            if self.frame > 3*ani:
-                self.frame = 0
-            self.image = self.walk_images[self.frame//ani]
+            # moving right animation
+            elif self.direction.x > 0:
+                if self.frame > 3*ani:
+                    self.frame = 0
+                self.image = self.walk_images[self.frame//ani]
         
         if self.direction.x < 0:
             self.leftorright = "left"

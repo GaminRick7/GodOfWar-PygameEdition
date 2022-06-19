@@ -4,40 +4,92 @@ import time
 
 ani = 4
 ALPHA = (0, 255, 0) 
-
+screen = pygame.display.set_mode((960, 480))
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, numwalkimg, numattackimg, source):
         pygame.sprite.Sprite.__init__(self)
+        #Health Variables
         self.health = 200
+        self.maximumHealth = 200
+
+        #Number of images for attack and walking animations
         self.numwalkimg = numwalkimg
         self.numattackimg = numattackimg
+
+        #Frame counter for walimg animation
         self.frame = 0
+
+        #Frame counter for attacking animation
         self.counter = 1
+
+        #Direction vector with x, y
         self.direction = pygame.math.Vector2(1,0)
+
+        #Sets gravity variable
         self.gravity = 0.8
+
+        #Iitially sets the boolean that checks if the enemy is attacking to False
         self.attacking = False
+
+        #Attack direction is set to none
         self.attackdirection = "none"
-        self.idle_images = []
+
+        #List  of all walking animation
+        self.walk_images = []
+
+        #List of all attack images
         self.attack_images = []
+
+        #Two for loops to add walking and attacking images to their respective lists
         for i in range(0, numwalkimg):
-            idle_image = pygame.image.load(os.path.join('images', source, 'walk', f'tile00{i}.png')).convert()
-            idle_image.convert_alpha()  # optimise alpha
-            self.idle_images.append(idle_image)
+            #loads the image by using tilee00 and i as the number added to it (as it is saved in the file directory); then, the image is convertre to access the pygame image features
+            walk_image = pygame.image.load(os.path.join('images', source, 'walk', f'tile00{i}.png')).convert()
+            #uses convert_alpha() to remove bakground from the image
+            walk_image.convert_alpha()
+            #appends the image to walk_images
+            self.walk_images.append(walk_image)
 
         for i in range(0, numattackimg):
+            #loads the image by using tilee00 and i as the number added to it (as it is saved in the file directory); then, the image is convertre to access the pygame image features
             attack_image = pygame.image.load(os.path.join('images', source, 'attack', f'tile00{i}.png')).convert()
-            attack_image.convert_alpha()  # optimise alpha
+            #uses convert_alpha() to remove bakground from the image
+            attack_image.convert_alpha()
+            #appends the image to attack_images
             self.attack_images.append(attack_image)
     
-
-        self.image = self.idle_images[-1]
+        #Sets image of the enemy to the final image of the walk images as the default
+        self.image = self.walk_images[-1]
+        #sets the rect of the enemy to the imge
         self.rect = self.image.get_rect(topleft = pos)
 
     def apply_gravity(self):
+        """
+        Applies gravity to the enemy
+        """
+        #constantly adds gravity to the y direction of the enemy
         self.direction.y += self.gravity
+        #updates the position of the enemy on the screen in accordance to the gravity added to direction.y
         self.rect.y  += self.direction.y
 
+
+    def draw_health(self):
+        """
+        Draws a helath indicator above the enemy
+        """
+        #Draws the enemy health using a red bar ; the width of the bar is determined by its health/2 
+        pygame.draw.rect(screen, (255,0,0), (self.rect.x - 30, self.rect.y - 20, self.health/2, 10))
+        #Draws a white outline around the enemy health bar to indicate its maximum health capacity; the width of the bar is determined by its health/2 
+        pygame.draw.rect(screen, (255,255,255), (self.rect.x- 30, self.rect.y -20, self.maximumHealth/2, 10), 2)
+
+
     def update(self, x_shift):
+        """
+        Args: x_shift
+        Returns: none
+        Calls all functions associated with the enemy and hecks for other conditions
+        """
+        #Draws the 
+        self.draw_health()
         if self.health <= 0:
             self.kill()
         self.rect.x += x_shift
@@ -65,11 +117,11 @@ class Enemy(pygame.sprite.Sprite):
             if self.frame > (self.numwalkimg - 1)*7:
                 self.frame = 0
             if self.frame %7 == 0:
-                self.image = pygame.transform.flip(self.idle_images[self.frame//7], True, False)
+                self.image = pygame.transform.flip(self.walk_images[self.frame//7], True, False)
         elif self.direction.x > 0:
             if self.frame > (self.numwalkimg - 1)*3:
                 self.frame = 0
             if self.frame %3 == 0:
-                self.image = self.idle_images[self.frame//7]
+                self.image = self.walk_images[self.frame//7]
 
 

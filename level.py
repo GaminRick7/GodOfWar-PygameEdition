@@ -9,12 +9,22 @@ from portal import Portal
 
 class Level:
     def __init__(self, level_data, surface, bgfolder, bgnumber):
+        #sets a surface to blit the sprites on
         self.display_surface = surface
+
+        #
         self.level_data = level_data
+
+        #sets scroll speed of the tiles to 0
         self.scroll_speed = 0
+
+        #Uses the PyParallax module to create a parallax backround
         self.bg = parallax.ParallaxSurface((960, 480), pygame.RLEACCEL)
-        # clouds should not move at all
+
+        # sets a counter i to 1
         i = 1
+
+        #sets the speed of the parallax tile
         speed = 5.5
         self.bg.add(os.path.join('images', f'{bgfolder}',f'0{i}.png'), inf)
         for image in range(bgnumber-1):
@@ -27,6 +37,7 @@ class Level:
         self.player = Player()  # spawn player
         self.player_list = pygame.sprite.Group()
         self.player_list.add(self.player)
+
 
         # Enemy #
         self.enemy_list = pygame.sprite.Group()
@@ -80,12 +91,16 @@ class Level:
                     self.player.rect.right = sprite.rect.left
                 if self.player.direction.x < 0:
                     self.player.rect.left = sprite.rect.right
+            ########## NOT WORKING#############
             for enemy in self.enemy_list.sprites():
                 if sprite.rect.colliderect(enemy.rect):
                     if enemy.direction.x > 0:
-                        enemy.rect.right = sprite.rect.left
-                    if enemy.direction.x < 0:
-                        enemy.rect.left = sprite.rect.right
+                        enemy.rect.right = sprite.rect.left - 0.5
+                        enemy.direction.x = -1
+                    elif enemy.direction.x < 0:
+                        enemy.rect.left = sprite.rect.right + 0.5
+                        enemy.direction.x = 1
+            ####################################
         for sprite in self.invisTiles.sprites():
             for enemy in self.enemy_list.sprites():
                 if sprite.rect.colliderect(enemy.rect):
@@ -146,13 +161,16 @@ class Level:
                             
                 #animation
                 self.player.counter += 1
-                if self.player.counter > (len(self.player.attack_images) - 1)*3:
+                if self.player.counter > (len(self.player.attack_images) - 1):
                     self.player.counter = 0
-                    self.player.image = self.player.walk_images[0]
+                    if self.player.leftorright == "right":
+                        self.player.image = self.player.walk_images[0]
+                    if self.player.leftorright == "left":
+                        self.player.image = pygame.transform.flip(self.player.walk_images[0], True, False)
                     self.player.attacking = False
                     print(enemy.health)
                 elif self.player.leftorright == "right":
-                    if self.player.counter > (len(self.player.attack_images) - 1)*3:
+                    if self.player.counter > (len(self.player.attack_images) - 1):
                         self.player.counter = 0
                         print("hogaya")
                         self.player.image = self.player.walk_images[0]

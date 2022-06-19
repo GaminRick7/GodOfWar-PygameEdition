@@ -7,8 +7,7 @@ class Portal(pygame.sprite.Sprite):
         self.ani_images = []
         self.counter = 0
         for i in range(7):
-            ani_image = pygame.image.load(os.path.join('images', 'portal', f'tile00{i}.png')).convert()
-            ani_image.convert_alpha()  # optimise alpha
+            ani_image = pygame.image.load(os.path.join('images', 'portal', f'tile00{i}.png'))
             self.ani_images.append(ani_image)
         self.image = self.ani_images[2]
         self.rect = self.image.get_rect(topleft = pos)
