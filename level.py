@@ -6,6 +6,8 @@ import parallax
 from math import inf
 import os
 from portal import Portal
+from shop import Shop
+from coin import Coin
 
 class Level:
     def __init__(self, level_data, surface, bgfolder, bgnumber):
@@ -32,7 +34,7 @@ class Level:
             speed -= 0.5
             self.bg.add(os.path.join('images', f'{bgfolder}',f'0{i}.png'), speed)
 
-    def setup_level(self, layout):
+    def setup_level(self):
         # Spawn Player #
         self.player = Player()  # spawn player
         self.player_list = pygame.sprite.Group()
@@ -50,7 +52,9 @@ class Level:
         self.tiles = pygame.sprite.Group()
         self.invisTiles = pygame.sprite.Group()
         self.portal_list = pygame.sprite.Group()
-        for row_index, row in enumerate(layout):
+        self.coin_list = pygame.sprite.Group()
+        self.shop_list = pygame.sprite.Group()
+        for row_index, row in enumerate(self.level_data):
             for col_index, cell in enumerate(row):
                 x = col_index *48
                 y = row_index *48
@@ -69,6 +73,12 @@ class Level:
                 if cell == "O":
                     portal = Portal((x, y), 48)
                     self.portal_list.add(portal)
+                if cell == "C":
+                    coin = Coin((x, y), 48)
+                    self.coin_list.add(coin)
+                if cell == "S":
+                    shop = Shop((x, y - 330), 48)
+                    self.shop_list.add(shop)
 
                     
         
@@ -143,7 +153,7 @@ class Level:
                         enemy.direction.y = 0
 
 
-    def epcollision(self):
+    def collisions(self):
         '''
         Args: self
         Returns: None
@@ -168,11 +178,9 @@ class Level:
                     if self.player.leftorright == "left":
                         self.player.image = pygame.transform.flip(self.player.walk_images[0], True, False)
                     self.player.attacking = False
-                    print(enemy.health)
                 elif self.player.leftorright == "right":
                     if self.player.counter > (len(self.player.attack_images) - 1):
                         self.player.counter = 0
-                        print("hogaya")
                         self.player.image = self.player.walk_images[0]
                     elif self.player.frame %3 == 0:
                         self.player.image = self.player.attack_images[self.player.counter//3]
@@ -196,18 +204,32 @@ class Level:
                     else:
                         self.player.rect.x -= 20
 
+        for coin in self.coin_list:
+            if coin.rect.colliderect(self.player.rect):
+                coin.kill()
+                self.player.money += 1
+                print(self.player.money)
+
     def run(self):
         self.scroll_x()
         self.tiles.update(self.world_shift)
         self.invisTiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
         self.invisTiles.draw(self.display_surface)
+        self.shop_list.update(self.world_shift)
+        self.shop_list.draw(self.display_surface)
+        self.coin_list.update(self.world_shift)
+        self.coin_list.draw(self.display_surface)
         self.player.update()
         self.player_list.draw(self.display_surface)
         self.vertical_movement_collision()
         self.horizontal_movement_collision()
-        self.epcollision()
+        self.collisions()
         self.enemy_list.draw(self.display_surface)
         self.enemy_list.update(self.world_shift)
         self.portal_list.update(self.world_shift)
         self.portal_list.draw(self.display_surface)
+'''
+coins
+shop
+'''

@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+from utility import get_font, screen
 worldx = 960
 worldy = 480
 
@@ -16,6 +17,7 @@ class Player(pygame.sprite.Sprite):
         self.attacking = False
         self.maximumHealth = 200
         self.health = 200
+        self.money = 0
 
         self.direction = pygame.math.Vector2(0,0)
         self.leftorright = "right"
@@ -60,8 +62,18 @@ class Player(pygame.sprite.Sprite):
         self.direction.x += x
     
     def draw_health(self):
-        pygame.draw.rect(screen, (255,0,0), (10, 10, self.health, 25))
-        pygame.draw.rect(screen, (255,255,255), (10,10, self.maximumHealth, 25), 4)
+        pygame.draw.rect(screen, (255,0,0), (20, 10, self.health, 25))
+        pygame.draw.rect(screen, (255,255,255), (20,10, self.maximumHealth, 25), 4)
+        heart = pygame.image.load(os.path.join('images', 'heart.png'))
+        screen.blit(heart, (5,6))
+
+    def draw_balance(self):
+        coin = pygame.image.load(os.path.join('images', 'coins', 'tile000.png'))
+        coin = pygame.transform.scale(coin, (32, 32))
+        screen.blit(coin, (850,6))
+        coinText = get_font(22).render(str(self.money), True, "White")
+        coinRect = coinText.get_rect(topleft=(890, 12))
+        screen.blit(coinText, coinRect)
 
     def update(self):
         """
@@ -70,6 +82,7 @@ class Player(pygame.sprite.Sprite):
         Update sprite position
         """
         self.draw_health()
+        self.draw_balance()
         if self.attacking != True:
             if self.rect.centerx > 100 and self.rect.centerx < 850:
                 self.speed = 2
