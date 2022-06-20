@@ -17,7 +17,8 @@ class Player(pygame.sprite.Sprite):
         self.attacking = False
         self.maximumHealth = 200
         self.health = 200
-        self.money = 0
+        self.money = 1000
+        self.damage = 50
 
         self.direction = pygame.math.Vector2(0,0)
         self.leftorright = "right"
@@ -70,10 +71,18 @@ class Player(pygame.sprite.Sprite):
     def draw_balance(self):
         coin = pygame.image.load(os.path.join('images', 'coins', 'tile000.png'))
         coin = pygame.transform.scale(coin, (32, 32))
-        screen.blit(coin, (850,6))
+        screen.blit(coin, (820,6))
         coinText = get_font(22).render(str(self.money), True, "White")
-        coinRect = coinText.get_rect(topleft=(890, 12))
+        coinRect = coinText.get_rect(topleft=(850, 12))
         screen.blit(coinText, coinRect)
+
+    def draw_attributes(self):
+        damage = pygame.image.load(os.path.join('images', 'coins', 'tile000.png'))
+        damage = pygame.transform.scale(damage, (32, 32))
+        screen.blit(damage, (700,6))
+        damageText = get_font(22).render(str(self.damage), True, "White")
+        damageRect = damageText.get_rect(topleft=(750, 12))
+        screen.blit(damageText, damageRect)
 
     def update(self):
         """
@@ -83,6 +92,7 @@ class Player(pygame.sprite.Sprite):
         """
         self.draw_health()
         self.draw_balance()
+        self.draw_attributes()
         if self.attacking != True:
             if self.rect.centerx > 100 and self.rect.centerx < 850:
                 self.speed = 2

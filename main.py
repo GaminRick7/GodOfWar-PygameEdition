@@ -4,7 +4,6 @@ import os
 import time
 from shop import ShopItem
 from tile import Tile
-from spritesheet import Spritesheet
 from level import Level
 from button import Button, imageButton
 from utility import get_font, screen, fps
@@ -51,7 +50,7 @@ level_map3 = [
 '',
 '',
 '',
-'CCCCCCCCCCC  S',
+'CCCCCCCCCCC  S                          O',
 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
 ################ MAIN ###################
@@ -180,7 +179,7 @@ def game_loop(): #Main Game Loop
                     if enterShop.checkForInput(mousepos):
                         inShop = True
                         controlsDisabled = True
-        
+        #http://pixelartmaker.com/art/bb84d0211d6dd52 buy button
         if inShop:
             items = pygame.sprite.Group()
             screen.fill("black")
@@ -188,6 +187,8 @@ def game_loop(): #Main Game Loop
                 item = ShopItem(individual)
                 items.add(item)
             items.draw(screen)
+            for item in items:
+                item.buyButton.update(screen)
             for item in items:
                 itemText = get_font(15).render(item.name, True, "White")
                 itemRect = itemText.get_rect(topleft=(item.rect.x + 25, item.rect.y))
@@ -205,27 +206,41 @@ def game_loop(): #Main Game Loop
                 costRect = itemText.get_rect(topleft=(720, item.rect.y))
                 screen.blit(costText, costRect)
             level.player.draw_balance()
+            level.player.draw_attributes()
+            level.player.draw_health()
             shopName = get_font(20).render("Brok's Warehouse of Madness (Shop)", True, "White")
-            shopNameRect = itemText.get_rect(center=(250, 35))
+            shopNameRect = itemText.get_rect(center=(250, 48))
             screen.blit(shopName, shopNameRect)
 
             itemHeader = get_font(15).render("Item", True, "White")
-            itemHeaderRect = itemText.get_rect(center=(230, 80))
+            itemHeaderRect = itemText.get_rect(center=(230, 90))
             screen.blit(itemHeader, itemHeaderRect)
 
             typeHeader = get_font(15).render("Type", True, "White")
-            typeHeaderRect = itemText.get_rect(center=(470, 80))
+            typeHeaderRect = itemText.get_rect(center=(470, 90))
             screen.blit(typeHeader, typeHeaderRect)
 
             buffHeader = get_font(15).render("Buff", True, "White")
-            buffHeaderRect = itemText.get_rect(center=(640, 80))
+            buffHeaderRect = itemText.get_rect(center=(640, 90))
             screen.blit(buffHeader, buffHeaderRect)
 
             costHeader = get_font(15).render("Cost", True, "White")
-            costHeaderRect = itemText.get_rect(center=(800, 80))
+            costHeaderRect = itemText.get_rect(center=(800, 90))
             screen.blit(costHeader, costHeaderRect)
             exitButton = imageButton(image=pygame.image.load("images/exitShop.png"), pos=(480, 400))
             exitButton.update(screen)
+
+            for item in items:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mousepos = pygame.mouse.get_pos()
+                    if item.buyButton.checkForInput(mousepos):
+                        if level.player.money >= item.cost:
+                            level.player.money -= item.cost
+                            if item.type == "health":
+                                level.player.maximumHealth += item.buff
+                                level.player.health = level.player.maximumHealth
+                            elif item.type == "damage":
+                                level.player.damage += item.buff
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mousepos = pygame.mouse.get_pos()
                 if exitButton.checkForInput(mousepos):

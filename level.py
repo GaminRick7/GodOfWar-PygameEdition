@@ -167,7 +167,7 @@ class Level:
                             enemy.rect.x += 50
                         if self.player.rect.x - enemy.rect.x > 0:
                             enemy.rect.x -= 50
-                        enemy.health -= 50
+                        enemy.health -= self.player.damage
                             
                 #animation
                 self.player.counter += 1
