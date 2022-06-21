@@ -96,28 +96,39 @@ class Level:
             
     def horizontal_movement_collision(self):
         #Normal Tile Collision
+        #For loop to cycle through every tile and check for collision
         for sprite in self.tiles.sprites():
+            #checks for tile collision with player
             if sprite.rect.colliderect(self.player.rect):
+                #if the player is moving right, the left of the tile is set to the right of the player
                 if self.player.direction.x > 0:
                     self.player.rect.right = sprite.rect.left
+                #if the player is moving left, the right of the tile is set to the left of the player
                 if self.player.direction.x < 0:
                     self.player.rect.left = sprite.rect.right
-            ########## NOT WORKING#############
+            #for loop to cycle through each enemy sprite and check for tile collision
             for enemy in self.enemy_list.sprites():
+                #checks for tile collision with enemy
                 if sprite.rect.colliderect(enemy.rect):
+                    # if the enemy is moving right, its right side is set 0.5 pixels away from the tile's left side, then its direction is switched to the opposite
                     if enemy.direction.x > 0:
                         enemy.rect.right = sprite.rect.left - 0.5
                         enemy.direction.x = -1
+                    # if the enemy is moving left, its left side is set 0.5 pixels away from the tile's right side, then its direction is switched to the opposite
                     elif enemy.direction.x < 0:
                         enemy.rect.left = sprite.rect.right + 0.5
                         enemy.direction.x = 1
             ####################################
+        #for loops to cycle through each enemy sprite and invisible tile to check for tile collision
         for sprite in self.invisTiles.sprites():
             for enemy in self.enemy_list.sprites():
+                #checks for collision
                 if sprite.rect.colliderect(enemy.rect):
+                    # if the enemy is moving right, its right side is set 0.5 pixels away from the tile's left side, then its direction is switched to the opposite
                     if enemy.direction.x > 0:
                         enemy.rect.right = sprite.rect.left - 0.5
                         enemy.direction.x = -1
+                    # if the enemy is moving left, its left side is set 0.5 pixels away from the tile's right side, then its direction is switched to the opposite
                     elif enemy.direction.x < 0:
                         enemy.rect.left = sprite.rect.right + 0.5
                         enemy.direction.x = 1
@@ -162,23 +173,33 @@ class Level:
         '''
         for enemy in self.enemy_list.sprites():
             if self.player.attacking == True:
+                #checks whether the player is within 40 px of the enemy on the x axis
                 if enemy.rect.x - self.player.rect.x <= 40 and enemy.rect.x - self.player.rect.x >= -40:
+                    #checks whether the player is with 10 px of the enemy on the y axis
                     if enemy.rect.y - self.player.rect.y <= 10 and enemy.rect.y - self.player.rect.y >= -10:
+                        # checks if the enemy is on the right 
                         if self.player.rect.x - enemy.rect.x < 0:
+                            #applies knockback effect of 50 px to the right
                             enemy.rect.x += 50
-                        if self.player.rect.x - enemy.rect.x > 0:
+                        #checks if enemy is on the left
+                        elif self.player.rect.x - enemy.rect.x > 0:
                             enemy.rect.x -= 50
+                        #subtracts player's damage from the enemy's health
                         enemy.health -= self.player.damage
                             
-                #animation
+                #Attacking animation
+                #Uses player.counter as the index for the player attack_images
                 self.player.counter += 1
+                #if the counter is greateer than 
                 if self.player.counter > (len(self.player.attack_images) - 1):
                     self.player.counter = 0
+                    #depending on whether the player is facing left or right, the player image is flipped and set to walk_images[0]
                     if self.player.leftorright == "right":
                         self.player.image = self.player.walk_images[0]
                     if self.player.leftorright == "left":
                         self.player.image = pygame.transform.flip(self.player.walk_images[0], True, False)
                     self.player.attacking = False
+                
                 elif self.player.leftorright == "right":
                     if self.player.counter > (len(self.player.attack_images) - 1):
                         self.player.counter = 0

@@ -285,6 +285,6 @@ def game_loop(): #Main Game Loop
                     level = level4
                     LevelText = get_font(15).render("Unknown", True, "White")
                 level.setup_level(pmaxhealth, pmoney, pdamage)
-                level.player.control(prevDirection)
+               level.player.control(prevDirection)
         pygame.display.flip()
 main_menu()
