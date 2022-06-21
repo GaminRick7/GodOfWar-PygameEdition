@@ -19,26 +19,26 @@ steps = 2
 
 level_map1 = [
 '                            ',
-'      I E I                    ',
-' XX    XXX                ',
+' C    I E I                    ',
+' XX    XXX                      CCCC',
 ' XX                             XXXXXX',
-'                             I E   IXX ',
-'      I  E    IX       I      IXXXXXXXXI      I  O',
-'       XXXXXXXXX       XXXXXXXXXXXXXXXXXX     XXXXXX ',
-'    P               ',
-'    XXXXXXXXXXXXXXXXXXXXX     X',
+'                              I ECCCIXX ',
+'      I  E CC IX       I CCCC IXXXXXXXXI      ICCO',
+'       XXXXXXXXX  O     XXXXXXXXXXXXXXXXXX     XXXXXX ',
+'    P      CCCCCCCCCC           CCCCCCCCCC',
+'    XXXXXXXXXXXXXXXXXXXXX     X CCCCCCCCCC       CCCC',
 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX']
 
 level_map2 = [
 '      E                      ',
 '    I   I                     ',
-'     XXX                     I  E    I',
+'     XXX                     I  ECCC I',
 '                              XXXXXXX  O',
-'             X          I E      I   XX ',
+'             X          I E  CCCCI   XX ',
 '                         XXXXXXXX ',
 '                          ',
-'    I   P                 I',
-'I    XXXXXXXXXXXXXXXXXXXXXI  E   IXI   E    I',
+'    I   P   CCCCC  CCCCCC I',
+'I    XXXXXXXXXXXXXXXXXXXXXI  E   IXI CCE    I',
 ' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
 level_map3 = [
@@ -50,32 +50,36 @@ level_map3 = [
 '',
 '',
 '',
-'CCCCCCCCCCC  S                          O',
+'CCCCCCCCCCCS                O          ',
 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
 ################ MAIN ###################
 
 def main_menu(): #Main Menu Screen that includes the play button and options button
-    menuimg = pygame.image.load("images/8OWVccL.gif")
-    logo = pygame.image.load("images/pngwing.com.png")
-    menuimg = pygame.transform.scale(menuimg, (960, 480))
+    mainMenuImages = []
+    imageNumber = 0
+    for i in range(0, 7):
+        image = pygame.image.load(os.path.join('images', 'menuback', f'frame_{i}_delay-0.1s.gif')).convert()
+        image = pygame.transform.scale(image, (960,480))
+        mainMenuImages.append(image)
     while True:
-        screen.blit(menuimg, (0,0))
+        if imageNumber > 139:
+            imageNumber = 0
+        screen.blit(mainMenuImages[imageNumber//20], (0,0))
+        imageNumber += 1
 
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-        MENU_TEXT = get_font(70).render("GOD OF WAR", True, "#ab0000")
+        MENU_TEXT = get_font(70).render("GOD OF WAR", True, "White")
         MENU_RECT = MENU_TEXT.get_rect(center=(480, 100))
 
         PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(480, 200), 
                             text_input="PLAY", font=get_font(35), base_color="#d7fcd4", hovering_color="White")
-        OPTIONS_BUTTON = Button(image=pygame.image.load("images/Options Rect.png"), pos=(480, 300), 
-                            text_input="OPTIONS", font=get_font(35), base_color="#d7fcd4", hovering_color="White")
         QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(480, 400), 
                             text_input="QUIT", font=get_font(35), base_color="#d7fcd4", hovering_color="White")
 
         screen.blit(MENU_TEXT, MENU_RECT)
 
-        for button in [PLAY_BUTTON, OPTIONS_BUTTON, QUIT_BUTTON]:
+        for button in [PLAY_BUTTON, QUIT_BUTTON]:
             button.changeColor(MENU_MOUSE_POS)
             button.update(screen)
         
@@ -86,8 +90,7 @@ def main_menu(): #Main Menu Screen that includes the play button and options but
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
                     game_loop()
-                if OPTIONS_BUTTON.checkForInput(MENU_MOUSE_POS):
-                    print("options")
+    
                 if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
                     pygame.quit()
                     sys.exit()
@@ -96,8 +99,8 @@ def main_menu(): #Main Menu Screen that includes the play button and options but
 
 
 
-shopInventory = [["armour1", "Loki's Armour", "health", 15, 85, (35, 125)], ["book1", "Odin's Blessing", "health", 25, 115, (35, 175)], ["mask1", "Balder's Curse", "damage", 15, 75, (35, 225)]]
-
+shopInventory = [["armour1", "Loki's Armour", "health", 15, 85, (35, 155)], ["book1", "Odin's Blessing", "health", 25, 115, (35, 205)], ["mask1", "Balder's Curse", "damage", 15, 75, (35, 255)]]
+bought = []
 def shop():
     while True:
         level = Level(level_map3, screen, "background", 7) 
@@ -106,8 +109,8 @@ def shop():
         screen.blit(LevelText, LevelRect)
 def game_loop(): #Main Game Loop
     mousepos = pygame.mouse.get_pos()
-    level = Level(level_map3, screen, "shopBackground", 7) 
-    #level = Level(level_map1, screen, "background", 7) 
+    shop = Level(level_map3, screen, "shopBackground", 7) 
+    level = Level(level_map1, screen, "background", 7) 
     level2 = Level(level_map2, screen, "background2", 7)
     level3 = Level(level_map2, screen, "background3", 9)
     level4 = Level(level_map1, screen, "background", 7)
@@ -116,7 +119,12 @@ def game_loop(): #Main Game Loop
 
     currentLevel = 1
     scroll_speed = 0
-    level.setup_level()
+
+    pmaxhealth = 200
+    pmoney = 1000
+    pdamage = 50
+
+    level.setup_level(pmaxhealth, pmoney, pdamage)
     LevelText = get_font(15).render("Level 1: Forests of Valheim", True, "White")
     controlsDisabled = False
     inShop = False
@@ -188,7 +196,12 @@ def game_loop(): #Main Game Loop
                 items.add(item)
             items.draw(screen)
             for item in items:
-                item.buyButton.update(screen)
+                if item.name not in bought:
+                    item.buyButton.update(screen)
+                else:
+                    ownedText = get_font(15).render("OWNED", True, "White")
+                    ownedRect = itemText.get_rect(center=(960, item.rect.y))
+                    screen.blit(ownedText, ownedRect)
             for item in items:
                 itemText = get_font(15).render(item.name, True, "White")
                 itemRect = itemText.get_rect(topleft=(item.rect.x + 25, item.rect.y))
@@ -209,30 +222,30 @@ def game_loop(): #Main Game Loop
             level.player.draw_attributes()
             level.player.draw_health()
             shopName = get_font(20).render("Brok's Warehouse of Madness (Shop)", True, "White")
-            shopNameRect = itemText.get_rect(center=(250, 48))
+            shopNameRect = itemText.get_rect(center=(250, 78))
             screen.blit(shopName, shopNameRect)
 
             itemHeader = get_font(15).render("Item", True, "White")
-            itemHeaderRect = itemText.get_rect(center=(230, 90))
+            itemHeaderRect = itemText.get_rect(center=(230, 118))
             screen.blit(itemHeader, itemHeaderRect)
 
             typeHeader = get_font(15).render("Type", True, "White")
-            typeHeaderRect = itemText.get_rect(center=(470, 90))
+            typeHeaderRect = itemText.get_rect(center=(470, 118))
             screen.blit(typeHeader, typeHeaderRect)
 
             buffHeader = get_font(15).render("Buff", True, "White")
-            buffHeaderRect = itemText.get_rect(center=(640, 90))
+            buffHeaderRect = itemText.get_rect(center=(640, 118))
             screen.blit(buffHeader, buffHeaderRect)
 
             costHeader = get_font(15).render("Cost", True, "White")
-            costHeaderRect = itemText.get_rect(center=(800, 90))
+            costHeaderRect = itemText.get_rect(center=(800, 118))
             screen.blit(costHeader, costHeaderRect)
             exitButton = imageButton(image=pygame.image.load("images/exitShop.png"), pos=(480, 400))
             exitButton.update(screen)
 
             for item in items:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    mousepos = pygame.mouse.get_pos()
+                mousepos = pygame.mouse.get_pos()
+                if event.type == pygame.MOUSEBUTTONDOWN and item.name not in bought:
                     if item.buyButton.checkForInput(mousepos):
                         if level.player.money >= item.cost:
                             level.player.money -= item.cost
@@ -241,6 +254,10 @@ def game_loop(): #Main Game Loop
                                 level.player.health = level.player.maximumHealth
                             elif item.type == "damage":
                                 level.player.damage += item.buff
+                            bought.append(item.name)
+                            inShop = False
+                            controlsDisabled = False
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mousepos = pygame.mouse.get_pos()
                 if exitButton.checkForInput(mousepos):
@@ -251,17 +268,23 @@ def game_loop(): #Main Game Loop
         for portal in level.portal_list:
             prevDirection = level.player.direction.x
             if level.player.rect.colliderect(portal.rect):
-                if currentLevel == 1:
+                pmaxhealth = level.player.maximumHealth
+                pmoney = level.player.money
+                pdamage = level.player.damage
+                currentLevel += 0.5
+                if currentLevel % 1 != 0:
+                    level = shop
+                    LevelText = get_font(15).render("The World Between Worlds", True, "White")
+                if currentLevel == 2:
                     level = level2
                     LevelText = get_font(15).render("Level 2: Valleys of Jotunheim", True, "White")
-                if currentLevel == 2:
+                if currentLevel == 3:
                     level = level3
                     LevelText = get_font(15).render("Level 3: Valleys of Alfheim", True, "White")
-                if currentLevel == 3:
+                if currentLevel == 4:
                     level = level4
                     LevelText = get_font(15).render("Unknown", True, "White")
-                currentLevel += 1
-                level.setup_level()
+                level.setup_level(pmaxhealth, pmoney, pdamage)
                 level.player.control(prevDirection)
         pygame.display.flip()
 main_menu()

@@ -34,9 +34,10 @@ class Level:
             speed -= 0.5
             self.bg.add(os.path.join('images', f'{bgfolder}',f'0{i}.png'), speed)
 
-    def setup_level(self):
+
+    def setup_level(self, pmaxhealth, pmoney, pdamage):
         # Spawn Player #
-        self.player = Player()  # spawn player
+        self.player = Player(pmaxhealth, pmoney, pdamage)  # spawn player
         self.player_list = pygame.sprite.Group()
         self.player_list.add(self.player)
 
@@ -74,7 +75,7 @@ class Level:
                     portal = Portal((x, y), 48)
                     self.portal_list.add(portal)
                 if cell == "C":
-                    coin = Coin((x, y), 48)
+                    coin = Coin((x+15, y+15), 48)
                     self.coin_list.add(coin)
                 if cell == "S":
                     shop = Shop((x, y - 330), 48)
