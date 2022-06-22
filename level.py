@@ -50,11 +50,15 @@ class Level:
         self.world_shift = 0
 
         #Setup Tile Map#
+
+        #Sprite groups for tiles, portals, coins, and shops
         self.tiles = pygame.sprite.Group()
         self.invisTiles = pygame.sprite.Group()
         self.portal_list = pygame.sprite.Group()
         self.coin_list = pygame.sprite.Group()
         self.shop_list = pygame.sprite.Group()
+
+        #
         for row_index, row in enumerate(self.level_data):
             for col_index, cell in enumerate(row):
                 x = col_index *48
@@ -72,22 +76,25 @@ class Level:
                     tile = invisTile((x, y), 48)
                     self.invisTiles.add(tile)
                 if cell == "O":
-                    portal = Portal((x, y), 48)
+                    portal = Portal((x, y))
                     self.portal_list.add(portal)
                 if cell == "C":
-                    coin = Coin((x+15, y+15), 48)
+                    coin = Coin((x+15, y+15))
                     self.coin_list.add(coin)
                 if cell == "S":
-                    shop = Shop((x, y - 330), 48)
+                    shop = Shop((x, y - 330))
                     self.shop_list.add(shop)
 
                     
         
     def scroll_x(self):
+        
         if self.player.attacking == False:
+            #if the player is at almost at its maximum possible right boundary of the screen (849) and is continuing to move right, world_shift is set to -4
             if self.player.rect.centerx == 849:
                 if self.player.direction.x > 0:
                     self.world_shift = -4
+            #if the player is at almost at its maximum possible right boundary of the screen (101) and is continuing to move right, world_shift is set to 4
             elif self.player.rect.centerx == 101:
                 if self.player.direction.x < 0:
                     self.world_shift = 4
@@ -190,7 +197,7 @@ class Level:
                 #Attacking animation
                 #Uses player.counter as the index for the player attack_images
                 self.player.counter += 1
-                #if the counter is greateer than 
+                #if the counter is greater than 
                 if self.player.counter > (len(self.player.attack_images) - 1):
                     self.player.counter = 0
                     #depending on whether the player is facing left or right, the player image is flipped and set to walk_images[0]
@@ -199,56 +206,75 @@ class Level:
                     if self.player.leftorright == "left":
                         self.player.image = pygame.transform.flip(self.player.walk_images[0], True, False)
                     self.player.attacking = False
-                
+                #depending on whether the player is facing left or right, the player image is flipped and set to attack_images[counter//3]
                 elif self.player.leftorright == "right":
-                    if self.player.counter > (len(self.player.attack_images) - 1):
-                        self.player.counter = 0
-                        self.player.image = self.player.walk_images[0]
-                    elif self.player.frame %3 == 0:
+                    if self.player.frame %3 == 0:
                         self.player.image = self.player.attack_images[self.player.counter//3]
                 elif self.player.leftorright == "left":
                     if self.player.frame %3 == 0:
                         self.player.image = pygame.transform.flip(self.player.attack_images[self.player.counter // 3], True, False)
-
+            
+            #checks if the player collides with the enemy
             elif enemy.rect.colliderect(self.player.rect):
+                #sets enemy.attacking to true which triggers the attack animation for the enemy
                 enemy.attacking = True
+                #checks if whether the player is on the right or the left of the enemy
                 if enemy.rect.x - self.player.rect.x < 0:
                     enemy.attackdirection = "right"
                 if enemy.rect.x - self.player.rect.x > 0:
                     enemy.attackdirection = "left"
+                #if the animatin attacking animation is finished
                 if enemy.counter == 0:
-                    print("player moved")
+                    #if the player is still in contact with the enemy 25 hp is subtracted from the player
                     if enemy.rect.colliderect(self.player.rect):
                         self.player.health -= 25
-                    print(self.player.health)
+                    #depending on whether the enemy is attacking left or right, a knockback effect is applied on the player
                     if enemy.attackdirection == "right":
                         self.player.rect.x += 20
                     else:
                         self.player.rect.x -= 20
 
+        #for loop to cycle through every coin and check for player collision
         for coin in self.coin_list:
+            #checks if the coin collided with the player
             if coin.rect.colliderect(self.player.rect):
+                #removes the coin from the screen
                 coin.kill()
+                #adds 1 to the players balance
                 self.player.money += 1
-                print(self.player.money)
 
     def run(self):
+        #World scroll
         self.scroll_x()
+
+        #Tiles
         self.tiles.update(self.world_shift)
         self.invisTiles.update(self.world_shift)
         self.tiles.draw(self.display_surface)
         self.invisTiles.draw(self.display_surface)
+
+        #Shop
         self.shop_list.update(self.world_shift)
         self.shop_list.draw(self.display_surface)
+
+        #Coins
         self.coin_list.update(self.world_shift)
         self.coin_list.draw(self.display_surface)
+
+        #Player
         self.player.update()
         self.player_list.draw(self.display_surface)
+
+        #Collisions
         self.vertical_movement_collision()
         self.horizontal_movement_collision()
         self.collisions()
+
+        #Enemies
         self.enemy_list.draw(self.display_surface)
         self.enemy_list.update(self.world_shift)
+
+        #Portal
         self.portal_list.update(self.world_shift)
         self.portal_list.draw(self.display_surface)
 '''

@@ -1,10 +1,7 @@
 import pygame
 import os
 import time
-
-ani = 4
-ALPHA = (0, 255, 0) 
-screen = pygame.display.set_mode((960, 480))
+from utility import screen
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, numwalkimg, numattackimg, source):
         pygame.sprite.Sprite.__init__(self)
@@ -16,7 +13,7 @@ class Enemy(pygame.sprite.Sprite):
         self.numwalkimg = numwalkimg
         self.numattackimg = numattackimg
 
-        #Frame counter for walimg animation
+        #Frame counter for walking animation
         self.frame = 0
 
         #Frame counter for attacking animation

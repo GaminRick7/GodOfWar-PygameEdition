@@ -1,7 +1,6 @@
 import pygame
 import sys
 import os
-import time
 from shop import ShopItem
 from tile import Tile
 from level import Level
@@ -54,59 +53,98 @@ level_map3 = [
 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
 ################ MAIN ###################
-
+############### VARIOUS SCREENS ###############
 def main_menu(): #Main Menu Screen that includes the play button and options button
+    '''
+    Args: None
+    Returns: None
+    Main Menu of the game
+    '''
+    #list of animations for main menu background
     mainMenuImages = []
+    #Frame counter for background
     imageNumber = 0
+    #for loop to load background frames
     for i in range(0, 7):
+        #loads the frames of the background
         image = pygame.image.load(os.path.join('images', 'menuback', f'frame_{i}_delay-0.1s.gif')).convert()
+        #scales it to fit the full screen
         image = pygame.transform.scale(image, (960,480))
+        #appends to mainMenuImages
         mainMenuImages.append(image)
+    #
     while True:
+        #checks that the frame counter does not exceed 139 as that would result in a list index out of range
         if imageNumber > 139:
             imageNumber = 0
+        #blits the background frame based on imageNumber
         screen.blit(mainMenuImages[imageNumber//20], (0,0))
+        #increases the frame counter
         imageNumber += 1
 
-        MENU_MOUSE_POS = pygame.mouse.get_pos()
-        MENU_TEXT = get_font(70).render("GOD OF WAR", True, "White")
-        MENU_RECT = MENU_TEXT.get_rect(center=(480, 100))
+        mousepos = pygame.mouse.get_pos()
+        menuText = get_font(70).render("GOD OF WAR", True, "White")
+        menuRect = menuText.get_rect(center=(480, 100))
+        #Creates a Quit Button and a Play Button
+        playButton = imageButton(image=pygame.transform.scale(pygame.image.load("images/Start.png"), (200, 65.28)), pos=(480, 200))
+        quitButton = imageButton(image=pygame.transform.scale(pygame.image.load("images/Quit.png"), (200, 65.28)), pos=(480, 300))
 
-        PLAY_BUTTON = Button(image=pygame.image.load("images/Play Rect.png"), pos=(480, 200), 
-                            text_input="PLAY", font=get_font(35), base_color="#d7fcd4", hovering_color="White")
-        QUIT_BUTTON = Button(image=pygame.image.load("images/Quit Rect.png"), pos=(480, 400), 
-                            text_input="QUIT", font=get_font(35), base_color="#d7fcd4", hovering_color="White")
+        #displays text on the screen
+        screen.blit(menuText, menuRect)
 
-        screen.blit(MENU_TEXT, MENU_RECT)
-
-        for button in [PLAY_BUTTON, QUIT_BUTTON]:
-            button.changeColor(MENU_MOUSE_POS)
+        #Updates all buttons
+        for button in [playButton, quitButton]:
             button.update(screen)
         
+        
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+            #checks if mouse button is pressed
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if PLAY_BUTTON.checkForInput(MENU_MOUSE_POS):
+                #if play button is pressed, the game begins
+                if playButton.checkForInput(mousepos):
                     game_loop()
-    
-                if QUIT_BUTTON.checkForInput(MENU_MOUSE_POS):
+                #if quit button is pressed, the game ends
+                if quitButton.checkForInput(mousepos):
                     pygame.quit()
                     sys.exit()
-
+        #updates the screen
         pygame.display.update()
 
+def gameOver():
+    '''
+    Args: None
+    Returns: None
+    Creates Game Over screen
+    '''
+    #Creates black background
+    screen.fill("black")
 
+    #Creates Game Over text
+    gameOverText = get_font(70).render("Game Over", True, "White")
+    gameOverRect = gameOverText.get_rect(center=(480, 100))
+    #Displays the text
+    screen.blit(gameOverText, gameOverRect)
+    #Creates Replay Button
+    replayButton = imageButton(image=pygame.transform.scale(pygame.image.load("images/replay.png"), (200,53.2)), pos=(480, 400))
+    #Displays Replay Button
+    replayButton.update(screen)
 
+    #mouse position to check for input
+    mousepos = pygame.mouse.get_pos()
+    for event in pygame.event.get():
+        #checks if mouse button is pressed
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            #checks if the replay button is clicked, if so, the game begins
+            if replayButton.checkForInput(mousepos):
+                game_loop()
+            
+################# SHOP VARIABLES##########################
+#A 2d list with all the image name, item name, buff type, buff, cost, and position for each item
 shopInventory = [["armour1", "Loki's Armour", "health", 15, 85, (35, 155)], ["book1", "Odin's Blessing", "health", 25, 115, (35, 205)], ["mask1", "Balder's Curse", "damage", 15, 75, (35, 255)]]
+# A list of items already purchased
 bought = []
-def shop():
-    while True:
-        level = Level(level_map3, screen, "background", 7) 
-        LevelText = get_font(15).render("unknown", True, "White")
-        LevelRect = LevelText.get_rect(center=(480, 50))
-        screen.blit(LevelText, LevelRect)
+##############################################
+################# MAIN GAME ##################
 def game_loop(): #Main Game Loop
     mousepos = pygame.mouse.get_pos()
     shop = Level(level_map3, screen, "shopBackground", 7) 
@@ -117,9 +155,12 @@ def game_loop(): #Main Game Loop
     level5 = Level(level_map2, screen, "background2", 7)
     level6 = Level(level_map2, screen, "background3", 9)
 
+    #The current level is default set to 1
     currentLevel = 1
+    #The scroll_speed of the background is set to 0
     scroll_speed = 0
 
+    #The players initial attributes are stored as the following vriables
     pmaxhealth = 200
     pmoney = 1000
     pdamage = 50
@@ -128,6 +169,8 @@ def game_loop(): #Main Game Loop
     LevelText = get_font(15).render("Level 1: Forests of Valheim", True, "White")
     controlsDisabled = False
     inShop = False
+    ###################################
+    
     while True:
         screen.fill((0,0,0))
         LevelRect = LevelText.get_rect(center=(480, 50))
@@ -172,8 +215,10 @@ def game_loop(): #Main Game Loop
         screen.blit(LevelText, LevelRect)
         if level.player.rect.y >= 960:
             level.player.kill()
+            gameOver()
         elif level.player.health <= 0:
             level.player.kill()
+            gameOver()
 
 
         for shop in level.shop_list:
@@ -219,7 +264,7 @@ def game_loop(): #Main Game Loop
                 costRect = itemText.get_rect(topleft=(720, item.rect.y))
                 screen.blit(costText, costRect)
             level.player.draw_balance()
-            level.player.draw_attributes()
+            level.player.draw_damage()
             level.player.draw_health()
             shopName = get_font(20).render("Brok's Warehouse of Madness (Shop)", True, "White")
             shopNameRect = itemText.get_rect(center=(250, 78))
@@ -285,6 +330,6 @@ def game_loop(): #Main Game Loop
                     level = level4
                     LevelText = get_font(15).render("Unknown", True, "White")
                 level.setup_level(pmaxhealth, pmoney, pdamage)
-               level.player.control(prevDirection)
+                level.player.control(prevDirection)
         pygame.display.flip()
 main_menu()
