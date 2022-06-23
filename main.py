@@ -135,6 +135,9 @@ def gameOver():
     #mouse position to check for input
     mousepos = pygame.mouse.get_pos()
     for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
         #checks if mouse button is pressed
         if event.type == pygame.MOUSEBUTTONDOWN:
             #checks if the replay button is clicked, if so, the game begins
