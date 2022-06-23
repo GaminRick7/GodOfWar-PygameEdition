@@ -19,6 +19,10 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pygame.
 ```bash
 pip install pygame
 ```
+Use [Git](https://gitforwindows.org) to install PyParallax.
+```bash
+pip install git+https://github.com/forslund/pyParallax#egg=pyparallax
+```
 
 ## Support
 If you have any questions regarding the program, contact [rsand10@ocdsb.ca](rsand10@ocdsb.ca).
