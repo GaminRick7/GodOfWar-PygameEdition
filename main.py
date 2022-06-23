@@ -98,6 +98,9 @@ def main_menu(): #Main Menu Screen that includes the play button and options but
         
         
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
             #checks if mouse button is pressed
             if event.type == pygame.MOUSEBUTTONDOWN:
                 #if play button is pressed, the game begins
@@ -146,6 +149,11 @@ bought = []
 ##############################################
 ################# MAIN GAME ##################
 def game_loop(): #Main Game Loop
+    '''
+    Args: none
+    Returns: none
+    Main game loop that controls all game actions
+    '''
     mousepos = pygame.mouse.get_pos()
     shop = Level(level_map3, screen, "shopBackground", 7) 
     level = Level(level_map1, screen, "background", 7) 
@@ -165,20 +173,27 @@ def game_loop(): #Main Game Loop
     pmoney = 1000
     pdamage = 50
 
+    #Creates the level using the player attributes
     level.setup_level(pmaxhealth, pmoney, pdamage)
+    #The default Level 1 heading; this variable changes based on the level
     LevelText = get_font(15).render("Level 1: Forests of Valheim", True, "White")
+    #Controls are not disabled
     controlsDisabled = False
+    #By default, the player is not in the shop
     inShop = False
     ###################################
-    
+    #while loop for the game to run in
     while True:
-        screen.fill((0,0,0))
+        #Creates a rect of the Level Header based on Level Tect
         LevelRect = LevelText.get_rect(center=(480, 50))
+        
         for event in pygame.event.get():
+            #closes the game if the window is closed
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
+            
+            #checks if a key is pressed and if the controls are disabled
             if event.type == pygame.KEYDOWN and controlsDisabled == False:
                 if event.key == ord('q'):
                     pygame.quit()
@@ -186,11 +201,16 @@ def game_loop(): #Main Game Loop
                         sys.exit()
                     finally:
                         main = False
+                #if the player presses "a"
                 if event.key == pygame.K_LEFT or event.key == ord('a'):
-                    level.player.control(-steps)
+                    #uses player.control() to move -2 pixels
+                    level.player.control(-2)
+                    #moves the parallax background by a factor of 2
                     scroll_speed -= 2
                 if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                    level.player.control(steps)
+                    #uses player.control() to move -2 pixels
+                    level.player.control(2)
+                    #moves the parallax background by a factor of 2
                     scroll_speed +=2
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == ord('w'):
                     level.player.jump()
@@ -199,20 +219,31 @@ def game_loop(): #Main Game Loop
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT or event.key == ord('a'):
-                    level.player.control(steps)
+                    #counteracts the player moving -2 pixels by moving the player 2 pixels
+                    level.player.control(2)
+                    #stops parallax background from moving
                     scroll_speed = 0
                 if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                    level.player.control(-steps)
+                    #counteracts the player moving -2 pixels by moving the player 2 pixels
+                    level.player.control(-2)
+                    #stops parallax background from moving
                     scroll_speed = 0
+        #based on the scroll speed the parallax background moves
         level.bg.scroll(scroll_speed)
+        #creates a clock tick
         clock.tick(fps)
+        #draws the background onto the screen
         level.bg.draw(screen)
+        #calls level.run()
         level.run()
         #########
         
 
         ######
+        #blits the level heading onto the screen
         screen.blit(LevelText, LevelRect)
+
+        #if the player is dead (fallen off the edge or health is less than 0), its sprite is killed and the game over screen is called
         if level.player.rect.y >= 960:
             level.player.kill()
             gameOver()
@@ -220,106 +251,162 @@ def game_loop(): #Main Game Loop
             level.player.kill()
             gameOver()
 
-
+        
         for shop in level.shop_list:
+            #checks if the player is colliding with the shop
             if level.player.rect.colliderect(shop.rect):
+                #creates an enter shop button onto the middle of the screen
                 enterShop = Button(image=pygame.image.load("images/Play Rect.png"), pos=(480, 200), 
                             text_input="Enter Shop?", font=get_font(30), base_color="#d7fcd4", hovering_color="White")
+                #gets the position of the mouse
                 mousepos = pygame.mouse.get_pos()
+
+                #updates the button based on hover, and places it on the screen
                 enterShop.changeColor(mousepos)
                 enterShop.update(screen)
+
+                #if the enter shop button is clicked
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if enterShop.checkForInput(mousepos):
+                        #the player is now in the shop
                         inShop = True
+                        #player can no longer move
                         controlsDisabled = True
         #http://pixelartmaker.com/art/bb84d0211d6dd52 buy button
+        #The shop
         if inShop:
+            #creates a sprite group of items
             items = pygame.sprite.Group()
+            #creates a black screen
             screen.fill("black")
+            #a for loop that that goes through all available shop items
             for individual in shopInventory:
+                #uses the ShopItem class to create an item based of the given attributes in its list
                 item = ShopItem(individual)
+                #adds the item to the sprite group
                 items.add(item)
+            #draws the item icons onto the screen
             items.draw(screen)
+            #goes through each of the items 
             for item in items:
+                #if the item has not been purchased, the buy button is place on the screen
                 if item.name not in bought:
                     item.buyButton.update(screen)
+                #if the player has already purchased an item , "owned" appears in place of the button
                 else:
                     ownedText = get_font(15).render("OWNED", True, "White")
                     ownedRect = itemText.get_rect(center=(960, item.rect.y))
                     screen.blit(ownedText, ownedRect)
-            for item in items:
+
+
+                ############ ITEM TABLE ###############
+                # HEADERS
+
+                #Creates the title of the shop at the top of the screen
+                shopName = get_font(20).render("Brok's Warehouse of Madness (Shop)", True, "White")
+                shopNameRect = shopName.get_rect(center=(250, 78))
+                screen.blit(shopName, shopNameRect)
+
+                #Creates a Table Header called Item
+                itemHeader = get_font(15).render("Item", True, "White")
+                itemHeaderRect = itemHeader.get_rect(center=(180, 118))
+                screen.blit(itemHeader, itemHeaderRect)
+
+                #Creates a Table Header called Item
+                typeHeader = get_font(15).render("Type", True, "White")
+                typeHeaderRect = typeHeader.get_rect(center=(400, 118))
+                screen.blit(typeHeader, typeHeaderRect)
+
+                #Creates a Table Header called Item
+                buffHeader = get_font(15).render("Buff", True, "White")
+                buffHeaderRect = buffHeader.get_rect(center=(560, 118))
+                screen.blit(buffHeader, buffHeaderRect)
+
+                #Creates a Table Header called Item
+                costHeader = get_font(15).render("Cost", True, "White")
+                costHeaderRect = costHeader.get_rect(center=(750, 118))
+                screen.blit(costHeader, costHeaderRect)
+                #A table of the items and its attributes is created next to the icon of the item
+                #The item name is rendered under the item header
                 itemText = get_font(15).render(item.name, True, "White")
                 itemRect = itemText.get_rect(topleft=(item.rect.x + 25, item.rect.y))
                 screen.blit(itemText, itemRect)
 
+                #The type of buff is rendered under the type header
                 typeText = get_font(15).render(item.type, True, "White")
                 typeRect = itemText.get_rect(topleft=(350, item.rect.y))
                 screen.blit(typeText, typeRect)
 
+                #The buff is rendered under the buff header
                 buffText = get_font(15).render(str(item.buff), True, "White")
                 buffRect = itemText.get_rect(topleft=(560, item.rect.y))
                 screen.blit(buffText, buffRect)
 
+                #The cost of the item is rendered under the cost header
                 costText = get_font(15).render(str(item.cost), True, "White")
                 costRect = itemText.get_rect(topleft=(720, item.rect.y))
                 screen.blit(costText, costRect)
+            
+            #draws the player attributes onto the screen so that the player can see how buying an item affects the attributes in real time
             level.player.draw_balance()
             level.player.draw_damage()
             level.player.draw_health()
-            shopName = get_font(20).render("Brok's Warehouse of Madness (Shop)", True, "White")
-            shopNameRect = itemText.get_rect(center=(250, 78))
-            screen.blit(shopName, shopNameRect)
-
-            itemHeader = get_font(15).render("Item", True, "White")
-            itemHeaderRect = itemText.get_rect(center=(230, 118))
-            screen.blit(itemHeader, itemHeaderRect)
-
-            typeHeader = get_font(15).render("Type", True, "White")
-            typeHeaderRect = itemText.get_rect(center=(470, 118))
-            screen.blit(typeHeader, typeHeaderRect)
-
-            buffHeader = get_font(15).render("Buff", True, "White")
-            buffHeaderRect = itemText.get_rect(center=(640, 118))
-            screen.blit(buffHeader, buffHeaderRect)
-
-            costHeader = get_font(15).render("Cost", True, "White")
-            costHeaderRect = itemText.get_rect(center=(800, 118))
-            screen.blit(costHeader, costHeaderRect)
+            #Creates an exit button on the screen to leave the shop
             exitButton = imageButton(image=pygame.image.load("images/exitShop.png"), pos=(480, 400))
             exitButton.update(screen)
 
             for item in items:
                 mousepos = pygame.mouse.get_pos()
+                #checks if buy button is clicked and the item is not already bought
                 if event.type == pygame.MOUSEBUTTONDOWN and item.name not in bought:
                     if item.buyButton.checkForInput(mousepos):
+                        #checks that the player has enough money to buy the item
                         if level.player.money >= item.cost:
+                            #removes the cost of the item from the player's balance
                             level.player.money -= item.cost
+                            #if the buff type of the item is "health", the maximum health is incrased based on the buff
                             if item.type == "health":
                                 level.player.maximumHealth += item.buff
                                 level.player.health = level.player.maximumHealth
+                            #if the buff type of the item is "damage", the player damage is increased based on the buff
                             elif item.type == "damage":
                                 level.player.damage += item.buff
+                            #adds the item name to the list of items already bought
                             bought.append(item.name)
+                            #player is no longer in the shop
                             inShop = False
+                            #controls are re-enabled
                             controlsDisabled = False
 
+
+            #Checks if the player clicked the exit button
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mousepos = pygame.mouse.get_pos()
                 if exitButton.checkForInput(mousepos):
-                    print("yeah")
+                    #player is no longer in the shop
                     inShop = False
+                    #controls are re-enabled
                     controlsDisabled = False
         
+        #for loop to go through all the portals in a level
         for portal in level.portal_list:
-            prevDirection = level.player.direction.x
+            #checks if the player is touching a portal
             if level.player.rect.colliderect(portal.rect):
+                #saves the player direction as prevDirection before changing the level
+                prevDirection = level.player.direction.x
+                #the players attributes are saved before changing th elevel
                 pmaxhealth = level.player.maximumHealth
                 pmoney = level.player.money
                 pdamage = level.player.damage
+                #currentLevel is increased in increments of 0.5 because every time currentLevel is not a whole number, the level will be set to the shop level
+                #As a result, between each "real" level, the player has an opportunity to visit the shop
                 currentLevel += 0.5
+                #if currentLevel is not a whole number, the level is set to the shop
                 if currentLevel % 1 != 0:
                     level = shop
+                    #Level Header changed
                     LevelText = get_font(15).render("The World Between Worlds", True, "White")
+                #The code below changes the level and the level header based on the updated currentLevel when it's a whole number
                 if currentLevel == 2:
                     level = level2
                     LevelText = get_font(15).render("Level 2: Valleys of Jotunheim", True, "White")
@@ -329,7 +416,12 @@ def game_loop(): #Main Game Loop
                 if currentLevel == 4:
                     level = level4
                     LevelText = get_font(15).render("Unknown", True, "White")
+                #sets up the level with the player attributes stored earlier
                 level.setup_level(pmaxhealth, pmoney, pdamage)
+                #moves the player in the direction it entered in the portal to stop it from moving
                 level.player.control(prevDirection)
+        #updates the screen
         pygame.display.flip()
+
+#calls the main menu to start the game as a whole
 main_menu()

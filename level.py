@@ -58,29 +58,39 @@ class Level:
         self.coin_list = pygame.sprite.Group()
         self.shop_list = pygame.sprite.Group()
 
-        #
+
+        #two for loops that go through each row and column of the level map
+        #uses enumaerate which adds counter to the iterable
         for row_index, row in enumerate(self.level_data):
             for col_index, cell in enumerate(row):
+                #the x value and y value are multipled by 48 to account for tile size
                 x = col_index *48
                 y = row_index *48
+                #creates a tile where there is an X on the level map
                 if cell == "X":
                     tile = Tile((x, y), 48)
                     self.tiles.add(tile)
+                #creates the player where there is an P on the level map
                 if cell == "P":
                     self.player.rect.x = x
                     self.player.rect.bottom = y
+                #creates an enemy where there is an E on the level map
                 if cell == "E":
-                    enemy = Enemy((x, y), 8, 8, "enemy1")
+                    enemy = Enemy((x, y), 8, 8, "enemy2")
                     self.enemy_list.add(enemy)
+                #creates an invisible tile where there is an I on the level map
                 if cell == "I":
                     tile = invisTile((x, y), 48)
                     self.invisTiles.add(tile)
+                #Creates the portal where there is an O on the map
                 if cell == "O":
                     portal = Portal((x, y))
                     self.portal_list.add(portal)
+                #Creates a coin where there is a C on the map
                 if cell == "C":
                     coin = Coin((x+15, y+15))
                     self.coin_list.add(coin)
+                #Creates a shop where there is an S on the map
                 if cell == "S":
                     shop = Shop((x, y - 330))
                     self.shop_list.add(shop)
@@ -228,7 +238,7 @@ class Level:
                     #if the player is still in contact with the enemy 25 hp is subtracted from the player
                     if enemy.rect.colliderect(self.player.rect):
                         self.player.health -= 25
-                    #depending on whether the enemy is attacking left or right, a knockback effect is applied on the player
+                        #depending on whether the enemy is attacking left or right, a knockback effect is applied on the player
                     if enemy.attackdirection == "right":
                         self.player.rect.x += 20
                     else:

@@ -97,27 +97,37 @@ class Enemy(pygame.sprite.Sprite):
         self.counter += 1
         #attacking animation
         if self.attacking == True:
+            #checks if the enemy is attacking right or left
             if self.attackdirection == "right":
                 if self.counter > (len(self.attack_images) - 1)*3:
                     self.counter = 0
                     self.attacking = False
+                #given the counter, it uses the counter as the index of attack_images to set the image of the enemy
                 if self.counter %3 == 0:
                     self.image = self.attack_images[self.counter//3]
             if self.attackdirection == "left":
                 if self.counter > (len(self.attack_images) - 1)*3:
                     self.counter = 0
                     self.attacking = False
+                 #given the counter, it uses the counter as the index of attack_images to set the image of the enemy
+                 #since the enemy is attacking left, the image is flipped
                 if self.counter %3 == 0:
                     self.image = pygame.transform.flip(self.attack_images[self.counter//3], True, False)
+                    
         #walking animation
+        #walking left
         elif self.direction.x < 0:
+            #if the frames exceedes a certain number, to prevent the list index to be out of range, the frame counter is set back to 0
             if self.frame > (self.numwalkimg - 1)*7:
                 self.frame = 0
+            #given the counter, it uses the counter as the index of attack_images to set the image of the enemy
+            #since the enemy is attacking left, the image is flipped
             if self.frame %7 == 0:
                 self.image = pygame.transform.flip(self.walk_images[self.frame//7], True, False)
         elif self.direction.x > 0:
             if self.frame > (self.numwalkimg - 1)*3:
                 self.frame = 0
+            #given the counter, it uses the counter as the index of attack_images to set the image of the enemy
             if self.frame %3 == 0:
                 self.image = self.walk_images[self.frame//7]
 
