@@ -131,7 +131,7 @@ def main_menu():
         for button in [playButton, quitButton]:
             button.update(screen)
         
-        
+        #
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -189,7 +189,7 @@ def intro():
     '''
     Args: None
     Returns: None
-    Creates Game Over screen
+    Creates an introduction screen screen
     '''
     while True:
         #Creates black background
@@ -216,7 +216,7 @@ def end():
     '''
     Args: None
     Returns: None
-    Creates Game Over screen
+    Creates an ending screen screen with a thank you message
     '''
     while True:
         #Creates black background
