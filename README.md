@@ -4,7 +4,7 @@ God of War: PyGame Edition is a 2D action-adventure platformer created using PyG
 
 ## Overview
 #### Story
-This game features Kratos, the god of war in greek mythology, who, having left the life of violence behind, settles in the lands of the Norse after finding himself a wife. Unfortunately, his wife meets an untimely death and her last wish was to have her ashes spread at the highest peak of the 9 realms. Thus, Kratos must embark on an adventure across the 7 realms where he must face enemies of all types to complete his wife's dying wish.
+This game features Kratos, the god of war in greek mythology, who, having left the life of violence behind, settles in the lands of the Norse after finding himself a wife. Unfortunately, his wife meets an untimely death and her last wish was to have her ashes spread at the highest peak of the 7 realms. Thus, Kratos must embark on an adventure across the 7 realms where he must face enemies of all types to complete his wife's dying wish.
 
 #### Features
 * Move the player around using WASD keys
