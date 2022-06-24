@@ -178,13 +178,7 @@ def gameOver():
             #checks if the replay button is clicked, if so, the game begins
             if replayButton.checkForInput(mousepos):
                 game_loop()
-            
-################# SHOP VARIABLES##########################
-#A 2d list with all the image name, item name, buff type, buff, cost, and position for each item
-shopInventory = [["armour1", "Loki's Armour", "health", 15, 85, (35, 155)], ["book1", "Odin's Blessing", "health", 25, 115, (35, 205)], ["mask1", "Balder's Curse", "damage", 15, 75, (35, 255)]]
-# A list of items already purchased
-bought = []
-
+        
 def intro():
     '''
     Args: None
@@ -241,6 +235,11 @@ def end():
         pygame.display.update()
 ##############################################
 ################# MAIN GAME ##################
+################# SHOP VARIABLES##########################
+#A 2d list with all the image name, item name, buff type, buff, cost, and position for each item
+shopInventory = [["armour1", "Loki's Armour", "health", 15, 85, (35, 155)], ["book1", "Odin's Blessing", "health", 25, 115, (35, 205)], ["mask1", "Balder's Curse", "damage", 15, 75, (35, 255)]]
+# A list of items already purchased
+bought = []
 def game_loop(): #Main Game Loop
     '''
     Args: none
@@ -369,7 +368,6 @@ def game_loop(): #Main Game Loop
                         inShop = True
                         #player can no longer move
                         controlsDisabled = True
-        #http://pixelartmaker.com/art/bb84d0211d6dd52 buy button
         #The shop
         if inShop:
             #creates a sprite group of items
