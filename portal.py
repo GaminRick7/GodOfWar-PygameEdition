@@ -1,3 +1,9 @@
+"""
+ICS3U
+Raihaan Sandhu
+The file is responsible the portal and its animations
+"""
+
 import pygame
 import os
 

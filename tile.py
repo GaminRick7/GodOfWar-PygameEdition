@@ -1,3 +1,9 @@
+"""
+ICS3U
+Raihaan Sandhu
+This file is responsible for the tile and the invisible tile
+"""
+
 import pygame
 import os
 

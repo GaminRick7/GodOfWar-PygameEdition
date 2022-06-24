@@ -1,3 +1,8 @@
+"""
+ICS3U
+Raihaan Sandhu
+This file is responsible for the coins on the screen
+"""
 import pygame
 import os
 

@@ -1,3 +1,10 @@
+"""
+ICS3U
+Raihaan Sandhu
+This file is responsible for all the different screens of the game (main menu, introduction, main game, end, shop)
+It is also responsible for taking in different inputs and calling functions in level.py in accordance to the inputs.
+"""
+
 import pygame
 import sys
 import os

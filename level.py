@@ -1,3 +1,9 @@
+"""
+ICS3U
+Raihaan Sandhu
+This file is responsible for creating all the objects on the screen and checking for interactions between various objects
+"""
+
 import pygame
 from tile import Tile, invisTile
 from player import Player

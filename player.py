@@ -1,3 +1,9 @@
+"""
+ICS3U
+Raihaan Sandhu
+This file is responsible for the player, its attributes, and its animations
+"""
+
 import pygame
 import sys
 import os

@@ -1,3 +1,9 @@
+"""
+ICS3U
+Raihaan Sandhu
+This file is to store important values that are used across a variety of files
+"""
+
 import pygame
 screen = pygame.display.set_mode((960, 480))
 fps = 40  # frame rate

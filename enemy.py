@@ -1,3 +1,9 @@
+"""
+ICS3U
+Raihaan Sandhu
+This file is responsible for the enemy, its attributes, and its animations
+"""
+
 import pygame
 import os
 import time

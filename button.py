@@ -1,4 +1,8 @@
-#BUTTON CLASS IMPORTED FROM 
+"""
+ICS3U
+Raihaan Sandhu
+This file is responsible for creating the button
+"""
 
 class Button():
 	def __init__(self, image, pos, text_input, font, base_color, hovering_color):

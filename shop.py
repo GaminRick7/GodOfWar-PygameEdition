@@ -1,3 +1,9 @@
+"""
+ICS3U
+Raihaan Sandhu
+This file is responsible for creating the outer image of the shop and managing the attributes of shop items
+"""
+
 import pygame
 import os
 from button import imageButton
