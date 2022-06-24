@@ -14,7 +14,7 @@ class Level:
         #sets a surface to blit the sprites on
         self.display_surface = surface
 
-        #
+        #level map
         self.level_data = level_data
 
         #sets scroll speed of the tiles to 0
@@ -33,6 +33,9 @@ class Level:
             i+= 1
             speed -= 0.5
             self.bg.add(os.path.join('images', f'{bgfolder}',f'0{i}.png'), speed)
+        
+        #variable to keep track of how many times the player has jumped
+        self.jumpCount = 0
 
 
     def setup_level(self, pmaxhealth, pmoney, pdamage):
@@ -76,7 +79,13 @@ class Level:
                     self.player.rect.bottom = y
                 #creates an enemy where there is an E on the level map
                 if cell == "E":
+                    enemy = Enemy((x, y), 8, 8, "enemy1")
+                    self.enemy_list.add(enemy)
+                if cell == "G":
                     enemy = Enemy((x, y), 8, 8, "enemy2")
+                    self.enemy_list.add(enemy)
+                if cell == "K":
+                    enemy = Enemy((x, y), 4, 8, "enemy3")
                     self.enemy_list.add(enemy)
                 #creates an invisible tile where there is an I on the level map
                 if cell == "I":
@@ -159,6 +168,8 @@ class Level:
         for sprite in self.tiles.sprites():
             #checks tile collision with player
             if sprite.rect.colliderect(self.player.rect):
+                #resets the number of times the player has jumped
+                self.jumpCount = 0
                 #checks if the player is jumping
                 if self.player.direction.y > 0:
                     #sets the bottom of the player as the top of the tile
@@ -193,7 +204,7 @@ class Level:
                 #checks whether the player is within 40 px of the enemy on the x axis
                 if enemy.rect.x - self.player.rect.x <= 40 and enemy.rect.x - self.player.rect.x >= -40:
                     #checks whether the player is with 10 px of the enemy on the y axis
-                    if enemy.rect.y - self.player.rect.y <= 10 and enemy.rect.y - self.player.rect.y >= -10:
+                    if enemy.rect.y - self.player.rect.y <= 30 and enemy.rect.y - self.player.rect.y >= -30:
                         # checks if the enemy is on the right 
                         if self.player.rect.x - enemy.rect.x < 0:
                             #applies knockback effect of 50 px to the right

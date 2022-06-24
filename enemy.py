@@ -125,10 +125,10 @@ class Enemy(pygame.sprite.Sprite):
             if self.frame %7 == 0:
                 self.image = pygame.transform.flip(self.walk_images[self.frame//7], True, False)
         elif self.direction.x > 0:
-            if self.frame > (self.numwalkimg - 1)*3:
+            if self.frame > (self.numwalkimg - 1)*7:
                 self.frame = 0
             #given the counter, it uses the counter as the index of attack_images to set the image of the enemy
-            if self.frame %3 == 0:
+            if self.frame %7 == 0:
                 self.image = self.walk_images[self.frame//7]
 
 

@@ -13,7 +13,7 @@ This game features Kratos, the god of war in greek mythology, who, having left t
 * Access a shop to buy items that upgrade the player's attributes
 * Traverse across a variety of different levels  using portals
 ## Installation
-
+Download the files as a zip and unzip into a folder.\
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install pygame.
 
 ```bash

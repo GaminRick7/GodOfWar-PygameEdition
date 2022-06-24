@@ -17,30 +17,64 @@ steps = 2
 ########## LEVEL MAPS ###############
 
 level_map1 = [
-'                            ',
-' C    I E I                    ',
-' XX    XXX                      CCCC',
-' XX                             XXXXXX',
-'                              I ECCCIXX ',
-'      I  E CC IX       I CCCC IXXXXXXXXI      ICCO',
-'       XXXXXXXXX  O     XXXXXXXXXXXXXXXXXX     XXXXXX ',
-'    P      CCCCCCCCCC           CCCCCCCCCC',
-'    XXXXXXXXXXXXXXXXXXXXX     X CCCCCCCCCC       CCCC',
-'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX']
+'                             ',
+'  C    I E I                    ',
+'  XX    XXX                      CCCC',
+'  XX                             XXXXXX',
+'                               I GCCCIXX ',
+'       I  K CC IX       I CCCC IXXXXXXXXI      ICCO',
+'        XXXXXXXXX       XXXXXXXXXXXXXXXXXX     XXXXXX ',
+'     P      CCCCCCCCCC           CCCCCCCCCC',
+'     XXXXXXXXXXXXXXXXXXXXX     X CCCCCCCCCC       CCCC',
+'OXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX']
 
 level_map2 = [
-'      E                      ',
-'    I   I                     ',
-'     XXX                     I  ECCC I',
-'                              XXXXXXX  O',
-'             X          I E  CCCCI   XX ',
-'                         XXXXXXXX ',
-'                          ',
-'    I   P   CCCCC  CCCCCC I',
-'I    XXXXXXXXXXXXXXXXXXXXXI  E   IXI CCE    I',
-' XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
+'       E                      ',
+'     I   I                     ',
+'      XXX                     I  ECCC I',
+'                               XXXXXXX  O',
+'              X          I E  CCCCI   XX ',
+'                          XXXXXXXX ',
+'                           ',
+'     I   P   CCCCC  CCCCCC I',
+' I    XXXXXXXXXXXXXXXXXXXXXI  E   IXI CCE    I',
+'OXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
 level_map3 = [
+'                             ',
+'  C    I E I                    ',
+'  XX    XXX                      CCCC',
+'  XX                             XXXXXX',
+'                             X I GCCCIXX ',
+'              I CCGC IXE  IKXXXIXXXXXXXXXX ICCO',
+'        XXXXXXXXXXXXXXXXXXXXXXXXX     XXXXXX ',
+'     CCPCCCCC           ',
+'     XXXXXXXXXXXI  G  IXXXXXXXXXXXI  K      I',
+'OXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX']
+level_map4 = [
+'                             ',
+'  C    I E I                    ',
+'  XX    XXX                      CCCC',
+'  XX                             XXXXXX',
+'                               I GCCCIXX ',
+'       I  K CC IX       I CCGC IXXXXXXXXI      ICCO',
+'        XXXXXXXXX       XXXXXXXXXXXXXXXXXX     XXXXXX ',
+'    IP   E   CCCKCCCCCC   I       CCCCCCCCCC',
+'     XXXXXXXXXXXXXXXXXXXXX     X CCCKCCCC       CCCC',
+'OXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX']
+level_map5 = [
+'       E                      ',
+'     ICCCI                     ',
+'      XXX                     I  KCCC I',
+'             I  G I            XXXXXXX  O',
+'              XXXX       I G  CCCCI   XX ',
+'                          XXXXXXXX ',
+'                           ',
+'     I   P   CCCCCK CCCCCC I',
+' I    XXXXXXXXXXXXXXXXXXXXXI  K   IXI CCE    I',
+'OXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
+
+level_map_shop = [
 '',
 '',
 '',
@@ -52,13 +86,14 @@ level_map3 = [
 'CCCCCCCCCCCS                O          ',
 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ']
 
+
 ################ MAIN ###################
 ############### VARIOUS SCREENS ###############
-def main_menu(): #Main Menu Screen that includes the play button and options button
+def main_menu(): 
     '''
     Args: None
     Returns: None
-    Main Menu of the game
+    Main Menu Screen that includes the play button and quit button
     '''
     #list of animations for main menu background
     mainMenuImages = []
@@ -105,7 +140,7 @@ def main_menu(): #Main Menu Screen that includes the play button and options but
             if event.type == pygame.MOUSEBUTTONDOWN:
                 #if play button is pressed, the game begins
                 if playButton.checkForInput(mousepos):
-                    game_loop()
+                    intro()
                 #if quit button is pressed, the game ends
                 if quitButton.checkForInput(mousepos):
                     pygame.quit()
@@ -149,6 +184,61 @@ def gameOver():
 shopInventory = [["armour1", "Loki's Armour", "health", 15, 85, (35, 155)], ["book1", "Odin's Blessing", "health", 25, 115, (35, 205)], ["mask1", "Balder's Curse", "damage", 15, 75, (35, 255)]]
 # A list of items already purchased
 bought = []
+
+def intro():
+    '''
+    Args: None
+    Returns: None
+    Creates Game Over screen
+    '''
+    while True:
+        #Creates black background
+        screen.blit(pygame.image.load("images/intro.png"), (0,0))
+        #Creates Replay Button
+        playButton = imageButton(image=pygame.transform.scale(pygame.image.load("images/start.png"), (100,32.5)), pos=(800, 400))
+        #Displays Replay Button
+        playButton.update(screen)
+
+        #mouse position to check for input
+        mousepos = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            #checks if mouse button is pressed
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                #checks if the replay button is clicked, if so, the game begins
+                if playButton.checkForInput(mousepos):
+                    game_loop()
+        pygame.display.update()
+
+def end():
+    '''
+    Args: None
+    Returns: None
+    Creates Game Over screen
+    '''
+    while True:
+        #Creates black background
+        screen.blit(pygame.image.load("images/end.png"), (0,0))
+        #Creates Replay Button
+        playButton = imageButton(image=pygame.transform.scale(pygame.image.load("images/quit.png"), (100,32.5)), pos=(480, 400))
+        #Displays Replay Button
+        playButton.update(screen)
+
+        #mouse position to check for input
+        mousepos = pygame.mouse.get_pos()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+            #checks if mouse button is pressed
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                #checks if the replay button is clicked, if so, the game begins
+                if playButton.checkForInput(mousepos):
+                    pygame.quit()
+                    sys.exit()
+        pygame.display.update()
 ##############################################
 ################# MAIN GAME ##################
 def game_loop(): #Main Game Loop
@@ -158,13 +248,13 @@ def game_loop(): #Main Game Loop
     Main game loop that controls all game actions
     '''
     mousepos = pygame.mouse.get_pos()
-    shop = Level(level_map3, screen, "shopBackground", 7) 
+    shopLevel = Level(level_map_shop, screen, "shopBackground", 7) 
     level = Level(level_map1, screen, "background", 7) 
     level2 = Level(level_map2, screen, "background2", 7)
-    level3 = Level(level_map2, screen, "background3", 9)
-    level4 = Level(level_map1, screen, "background", 7)
-    level5 = Level(level_map2, screen, "background2", 7)
-    level6 = Level(level_map2, screen, "background3", 9)
+    level3 = Level(level_map3, screen, "background3", 9)
+    level4 = Level(level_map4, screen, "background4", 5)
+    level5 = Level(level_map5, screen, "background5", 6)
+    level6 = Level(level_map4, screen, "background6", 2)
 
     #The current level is default set to 1
     currentLevel = 1
@@ -184,18 +274,18 @@ def game_loop(): #Main Game Loop
     controlsDisabled = False
     #By default, the player is not in the shop
     inShop = False
+
     ###################################
     #while loop for the game to run in
     while True:
         #Creates a rect of the Level Header based on Level Tect
         LevelRect = LevelText.get_rect(center=(480, 50))
-        
+
         for event in pygame.event.get():
             #closes the game if the window is closed
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            
             #checks if a key is pressed and if the controls are disabled
             if event.type == pygame.KEYDOWN and controlsDisabled == False:
                 if event.key == ord('q'):
@@ -216,7 +306,11 @@ def game_loop(): #Main Game Loop
                     #moves the parallax background by a factor of 2
                     scroll_speed +=2
                 if event.key == pygame.K_SPACE or event.key == pygame.K_UP or event.key == ord('w'):
-                    level.player.jump()
+                    #ensures that the player can only jump twice (double jump)
+                    if level.jumpCount <= 1:
+                        #increases jump count everytime the player jumps
+                        level.jumpCount += 1
+                        level.player.jump()
                 if event.key == ord('e'):
                     level.player.attacking = True
 
@@ -404,21 +498,30 @@ def game_loop(): #Main Game Loop
                 #currentLevel is increased in increments of 0.5 because every time currentLevel is not a whole number, the level will be set to the shop level
                 #As a result, between each "real" level, the player has an opportunity to visit the shop
                 currentLevel += 0.5
+                if currentLevel == 6.5:
+                    end()
                 #if currentLevel is not a whole number, the level is set to the shop
-                if currentLevel % 1 != 0:
-                    level = shop
+                elif currentLevel % 1 != 0:
+                    level = shopLevel
                     #Level Header changed
                     LevelText = get_font(15).render("The World Between Worlds", True, "White")
                 #The code below changes the level and the level header based on the updated currentLevel when it's a whole number
-                if currentLevel == 2:
+                elif currentLevel == 2:
                     level = level2
                     LevelText = get_font(15).render("Level 2: Valleys of Jotunheim", True, "White")
-                if currentLevel == 3:
+                elif currentLevel == 3:
                     level = level3
-                    LevelText = get_font(15).render("Level 3: Valleys of Alfheim", True, "White")
-                if currentLevel == 4:
+                    LevelText = get_font(15).render("Level 3: Valleys of Valhalla", True, "White")
+                elif currentLevel == 4:
                     level = level4
-                    LevelText = get_font(15).render("Unknown", True, "White")
+                    LevelText = get_font(15).render("Level 4: Grounds of Vanheim", True, "White")
+                elif currentLevel == 5:
+                    level = level5
+                    LevelText = get_font(15).render("Level 5: Gardens of Alfheim", True, "White")
+                elif currentLevel == 6:
+                    level = level6
+                    LevelText = get_font(15).render("Level 6: Caves of Nilfheim", True, "White")
+                
                 #sets up the level with the player attributes stored earlier
                 level.setup_level(pmaxhealth, pmoney, pdamage)
                 #moves the player in the direction it entered in the portal to stop it from moving
