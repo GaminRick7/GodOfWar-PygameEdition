@@ -17,6 +17,11 @@ from coin import Coin
 
 class Level:
     def __init__(self, level_data, surface, bgfolder, bgnumber):
+        '''
+        Args: level_data, surface, bgfolder, bgnumber
+        Returns: None
+        Creates the level, loads the tilemap data, and loads the background layers
+        '''
         #sets a surface to blit the sprites on
         self.display_surface = surface
 
@@ -45,6 +50,11 @@ class Level:
 
 
     def setup_level(self, pmaxhealth, pmoney, pdamage):
+        '''
+        Args: pmaxhealth, pmoney, pdamage
+        Returns: None
+        Uses tilemap data to display the various elements onto the screen
+        '''
         # Spawn Player #
         self.player = Player(pmaxhealth, pmoney, pdamage)  # spawn player
         self.player_list = pygame.sprite.Group()
@@ -83,13 +93,15 @@ class Level:
                 if cell == "P":
                     self.player.rect.x = x
                     self.player.rect.bottom = y
-                #creates an enemy where there is an E on the level map
+                #creates a mushroom enemy where there is an E on the level map
                 if cell == "E":
                     enemy = Enemy((x, y), 8, 8, "enemy1")
                     self.enemy_list.add(enemy)
+                #creates a goblin enemy where there is an E on the level map
                 if cell == "G":
                     enemy = Enemy((x, y), 8, 8, "enemy2")
                     self.enemy_list.add(enemy)
+                #creates a skeleton enemy where there is an E on the level map
                 if cell == "K":
                     enemy = Enemy((x, y), 4, 8, "enemy3")
                     self.enemy_list.add(enemy)
@@ -113,7 +125,11 @@ class Level:
                     
         
     def scroll_x(self):
-        
+        '''
+        Args: None
+        Returns: None
+        Moves tilemap according to the player touching its movement boundaries
+        '''
         if self.player.attacking == False:
             #if the player is at almost at its maximum possible right boundary of the screen (849) and is continuing to move right, world_shift is set to -4
             if self.player.rect.centerx == 849:
@@ -127,6 +143,11 @@ class Level:
                 self.world_shift = 0
             
     def horizontal_movement_collision(self):
+        '''
+        Args: pmaxhealth, pmoney, pdamage
+        Returns: None
+        Checks for horizontal collision with tiles for player and enemy (real and invisible)
+        '''
         #Normal Tile Collision
         #For loop to cycle through every tile and check for collision
         for sprite in self.tiles.sprites():
@@ -168,6 +189,11 @@ class Level:
     
     
     def vertical_movement_collision(self):
+        '''
+        Args: None
+        Returns: None
+        Checks for vertical collision with tiles for player and enemy
+        '''
         #applies gravity to the player/calls apply_gravity()
         self.player.apply_gravity()
         #a for loop to check player collision with each and every tile
@@ -271,6 +297,11 @@ class Level:
                 self.player.money += 1
 
     def run(self):
+        '''
+        Args: None
+        Returns: None
+        This function is reponsible for running all the various functions for the various objects
+        '''
         #World scroll
         self.scroll_x()
 
@@ -304,7 +335,3 @@ class Level:
         #Portal
         self.portal_list.update(self.world_shift)
         self.portal_list.draw(self.display_surface)
-'''
-coins
-shop
-'''

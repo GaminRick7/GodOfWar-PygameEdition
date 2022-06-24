@@ -9,9 +9,8 @@ import pygame
 import sys
 import os
 from shop import ShopItem
-from tile import Tile
 from level import Level
-from button import Button, imageButton
+from button import imageButton
 from utility import get_font, screen, fps
 
 
@@ -269,7 +268,7 @@ def game_loop(): #Main Game Loop
 
     #The players initial attributes are stored as the following vriables
     pmaxhealth = 200
-    pmoney = 1000
+    pmoney = 100
     pdamage = 50
 
     #Creates the level using the player attributes
@@ -359,13 +358,11 @@ def game_loop(): #Main Game Loop
             #checks if the player is colliding with the shop
             if level.player.rect.colliderect(shop.rect):
                 #creates an enter shop button onto the middle of the screen
-                enterShop = Button(image=pygame.image.load("images/Play Rect.png"), pos=(480, 200), 
-                            text_input="Enter Shop?", font=get_font(30), base_color="#d7fcd4", hovering_color="White")
+                enterShop = imageButton(image=pygame.transform.scale(pygame.image.load("images/shopButton.png"), (100,32.5)), pos=(480, 240))
                 #gets the position of the mouse
                 mousepos = pygame.mouse.get_pos()
 
                 #updates the button based on hover, and places it on the screen
-                enterShop.changeColor(mousepos)
                 enterShop.update(screen)
 
                 #if the enter shop button is clicked
@@ -406,7 +403,7 @@ def game_loop(): #Main Game Loop
 
                 #Creates the title of the shop at the top of the screen
                 shopName = get_font(20).render("Brok's Warehouse of Madness (Shop)", True, "White")
-                shopNameRect = shopName.get_rect(center=(250, 78))
+                shopNameRect = shopName.get_rect(center=(480, 78))
                 screen.blit(shopName, shopNameRect)
 
                 #Creates a Table Header called Item

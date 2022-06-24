@@ -88,6 +88,11 @@ class Player(pygame.sprite.Sprite):
         self.direction.x += x
     
     def draw_health(self):
+        '''
+        Args: None
+        Returns: None
+        Draws health bar
+        '''
         #draws the of the player in red
         pygame.draw.rect(screen, (255,0,0), (20, 10, self.health, 25))
         #draws a maximum health outline in white
@@ -97,6 +102,11 @@ class Player(pygame.sprite.Sprite):
         screen.blit(heart, (5,6))
 
     def draw_balance(self):
+        '''
+        Args: None
+        Returns: None
+        Draws coin balance
+        '''
         #displays a coin next to the player's balance
         coin = pygame.image.load(os.path.join('images', 'coins', 'tile000.png'))
         coin = pygame.transform.scale(coin, (32, 32))
@@ -107,6 +117,11 @@ class Player(pygame.sprite.Sprite):
         screen.blit(coinText, coinRect)
 
     def draw_damage(self):
+        '''
+        Args: None
+        Returns: None
+        Draws player's damage
+        '''
         #displays a sword next to the player's balance
         damage = pygame.image.load(os.path.join('images', 'sword.png'))
         damage = pygame.transform.scale(damage, (32, 32))
